@@ -12,11 +12,13 @@ var
 
 exports.load = function(cb){
 	console.log('loading channels list');
-	fs.readFile('/etc/channels.conf', function(err, data) {
+	fs.readFile(app.path('data/channels.conf'), function(err, data) {
 		if (err) throw err;
 
 		var n = 0;
 		nameConv.convert(data).toString().split("\n").forEach(function(line) {
+			if(line.length == 0) return;
+
 			line = line.split(':');
 			channels.push({idx: ++n, name: line[0], fav: false});
 		});

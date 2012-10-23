@@ -4,27 +4,35 @@
  */
 
 console.log('loading modules');
-var express = require('express'),
-	expresshelpers = require('express-helpers');
-	routes = require('./routes'),
-	channels = require('./routes/channels'),
+var path = require('path'),
+	express = require('express'),
+	expresshelpers = require('express-helpers'),
 	http = require('http'),
 	path = require('path'),
 	async = require('async');
 
-var app = express();
+console.log('loading app');
+var
+	apppath = path.dirname(process.mainModule.filename),
+	app = global.app = express();
 
+app.path = function(part) {
+	return path.join(apppath, part || '');
+}
+
+console.log('configuring app');
 app.configure(function(){
 	app.set('port', process.env.PORT || 3000);
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
-	app.use(express.favicon(__dirname + '/public/images/favicon.ico'));
+
+	app.use(express.favicon(app.path('public/images/favicon.ico')));
 	app.use(express.logger('dev'));
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(require('less-middleware')({ src: __dirname + '/public' }));
-	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(require('less-middleware')({ src: app.path('public') }));
+	app.use(express.static(app.path('public')));
 
 	expresshelpers(app);
 });
@@ -32,6 +40,11 @@ app.configure(function(){
 app.configure('development', function(){
 	app.use(express.errorHandler());
 });
+
+console.log('loading routes');
+var
+	routes = require('./routes'),
+	channels = require('./routes/channels');
 
 app.get('/', routes.index);
 app.get('/channels', channels.list);

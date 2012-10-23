@@ -3,7 +3,7 @@
  * GET home page.
  */
 
-var channels = require('./channels');
+var channels = require(app.path('routes/channels'));
 
 exports.index = function(req, res){
 	res.render('index', {
