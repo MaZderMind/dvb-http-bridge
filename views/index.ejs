@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Fernsehen bei Peter und Jasmin</title>
+		<title><%= str.title %></title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,11 +11,23 @@
 	</head>
 	<body>
 		<div data-role="page">
-			<h1 data-role="header" data-theme="f">Fernsehen bei Peter und Jasmin</h1>
+			<h1 data-role="header" data-theme="f"><%= str.title %></h1>
+
+			<div class="ui-grid-c">
+				<div class="ui-block-a"><button type="button" data-theme="c">RTL</button></div>
+				<div class="ui-block-b"><button type="button" data-theme="c">Pro 7</button></div>
+				<div class="ui-block-c"><button type="button" data-theme="c">Sat 1</button></div>
+				<div class="ui-block-d"><button type="button" data-theme="c">VOX</button></div>
+
+				<div class="ui-block-a"><button type="button" data-theme="c">Kabel 1</button></div>
+				<div class="ui-block-b"><button type="button" data-theme="c">ARD</button></div>
+				<div class="ui-block-c"><button type="button" data-theme="c">ZDF</button></div>
+				<div class="ui-block-d"><button type="button" data-theme="c">RTL2</button></div>
+			</div>
 
 			<ul data-role="listview">
-				<li data-role="list-divider">Favoriten</li>
-				<li data-role="list-divider">Der ganze Rest</li>
+				<li data-role="list-divider"><%= str.favs %></li>
+				<li data-role="list-divider"><%= str.rest %></li>
 				<% for(var i = 0, n = channels.length; i<n; i++) { %>
 				<li><%- link_to(channels[i].name, 'channel/'+channels[i].idx) %></li>
 				<% } %>
