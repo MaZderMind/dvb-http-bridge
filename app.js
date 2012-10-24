@@ -23,7 +23,7 @@ app.path = function(part) {
 console.log('configuring app');
 app.configure(function(){
 	app.set('port', process.env.PORT || 3000);
-	app.set('views', __dirname + '/views');
+	app.set('views', app.path('views'));
 	app.set('view engine', 'ejs');
 
 	app.use(express.favicon(app.path('public/images/favicon.ico')));
