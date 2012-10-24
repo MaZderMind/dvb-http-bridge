@@ -5,8 +5,7 @@
 
 var
 	fs = require('fs'),
-	Iconv = require('iconv').Iconv,
-	nameConv = new Iconv('ISO-8859-1', 'UTF-8'),
+	iconv = require('iconv-lite'),
 	channels = [];
 
 
@@ -16,7 +15,7 @@ exports.load = function(cb){
 		if (err) throw err;
 
 		var n = 0;
-		nameConv.convert(data).toString().split("\n").forEach(function(line) {
+		iconv.decode(data, 'ISO-8859-1').split("\n").forEach(function(line) {
 			if(line.length == 0) return;
 
 			line = line.split(':');
