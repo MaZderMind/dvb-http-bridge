@@ -6,32 +6,55 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
+		<link rel="stylesheet" href="/stylesheets/app.css" />
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
 	</head>
 	<body>
 		<div data-role="page">
-			<h1 data-role="header" data-theme="f"><%= str.title %></h1>
+			<div data-role="content">
+				<h1 data-role="header" data-theme="f"><%= str.title %></h1>
 
-			<div class="ui-grid-c">
-				<div class="ui-block-a"><button type="button" data-theme="c">RTL</button></div>
-				<div class="ui-block-b"><button type="button" data-theme="c">Pro 7</button></div>
-				<div class="ui-block-c"><button type="button" data-theme="c">Sat 1</button></div>
-				<div class="ui-block-d"><button type="button" data-theme="c">VOX</button></div>
+				<div class="ui-grid-d favs">
+					<div class="ui-block-a">
+						<button type="button" data-theme="c">
+							<span>ARD</span>
+							<img src="images/stations/ard_das_erste.png" />
+						</button>
+					</div>
+					<div class="ui-block-b">
+						<button type="button" data-theme="c">
+							<span>RTL</span>
+							<img src="images/stations/rtl_de.png" />
+						</button>
+					</div>
+					<div class="ui-block-c">
+						<button type="button" data-theme="c">
+							<span>Pro 7</span>
+							<img src="images/stations/pro_sieben_de.png" />
+						</button>
+					</div>
+					<div class="ui-block-d">
+						<button type="button" data-theme="c">
+							<span>Sat 1</span>
+							<img src="images/stations/sat1.png" />
+						</button>
+					</div>
+					<div class="ui-block-e">
+						<button type="button" data-theme="c">
+							<span>VOX</span>
+							<img src="images/stations/vox_de.png" />
+						</button>
+					</div>
+				</div>
 
-				<div class="ui-block-a"><button type="button" data-theme="c">Kabel 1</button></div>
-				<div class="ui-block-b"><button type="button" data-theme="c">ARD</button></div>
-				<div class="ui-block-c"><button type="button" data-theme="c">ZDF</button></div>
-				<div class="ui-block-d"><button type="button" data-theme="c">RTL2</button></div>
+				<ul data-role="listview">
+					<li data-role="list-divider"><%= str.allchannels %></li>
+					<% for(var i = 0, n = channels.length; i<n; i++) { %>
+					<li><%- link_to(channels[i].name, 'channel/'+channels[i].idx) %></li>
+					<% } %>
+				</ul>
 			</div>
-
-			<ul data-role="listview">
-				<li data-role="list-divider"><%= str.favs %></li>
-				<li data-role="list-divider"><%= str.rest %></li>
-				<% for(var i = 0, n = channels.length; i<n; i++) { %>
-				<li><%- link_to(channels[i].name, 'channel/'+channels[i].idx) %></li>
-				<% } %>
-			</ul>
 		</div>
 	</body>
 </html>
