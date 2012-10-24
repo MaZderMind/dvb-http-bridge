@@ -1,9 +1,19 @@
-.box-shadow(@style, @color) when (iscolor(@color)) {
-	box-shadow:         @style @color;
-	-webkit-box-shadow: @style @color;
-	-moz-box-shadow:    @style @color;
-}
+.boxlayout (@orient, @pack: center, @align: center) {
+	/* Firefox */
+	display: -moz-box;
+	-moz-box-orient: @orient;
+	-moz-box-pack: @pack;
+	-moz-box-align: @align;
 
-.box-shadow(@style, @alpha: 50%) when (isnumber(@alpha)) {
-	.box-shadow(@style, rgba(0, 0, 0, @alpha));
+	/* Safari and Chrome */
+	display: -webkit-box;
+	-webkit-box-orient: @orient;
+	-webkit-box-pack: @pack;
+	-webkit-box-align: @align;
+
+	/* W3C */
+	display: box;
+	box-orient: @orient;
+	box-pack: @pack;
+	box-align: @align;
 }
