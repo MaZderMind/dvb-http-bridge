@@ -20,58 +20,27 @@
 
 			<div data-role="content">
 				<div class="ui-grid-d favs">
-					<div class="ui-block-a">
-						<button type="button" data-theme="c">
-							<span class="title">ARD</span>
-							<div class="logo">
-								<img src="images/stations/lores/ard_das_erste.png" />
-							</div>
-							<span class="epg">20:15 bis 21:45: Herbstkind</span>
-						</button>
-					</div>
-					<div class="ui-block-b">
-						<button type="button" data-theme="c">
-							<span class="title">RTL</span>
-							<div class="logo">
-								<img src="images/stations/lores/rtl_de.png" />
-							</div>
-							<span class="epg">20:15 bis 21:15: Christopher Posch - Ich kämpfe für Ihr Recht!</span>
-						</button>
-					</div>
-					<div class="ui-block-c">
-						<button type="button" data-theme="c">
-							<span class="title">Pro 7</span>
-							<div class="logo">
-								<img src="images/stations/lores/pro_sieben_de.png" />
-							</div>
-							<span class="epg">20:15 bis 21:15: Grey's Anatomy - Die jungen Ärzte</span>
-						</button>
-					</div>
-					<div class="ui-block-d">
-						<button type="button" data-theme="c">
-							<span class="title">Sat 1</span>
-							<div class="logo">
-								<img src="images/stations/lores/sat1.png" />
-							</div>
-							<span class="epg">20:15 - 22:40: Hitch - Der Date Doktor</span>
-						</button>
-					</div>
-					<div class="ui-block-e">
-						<button type="button" data-theme="c">
-							<span class="title">VOX</span>
-							<div class="logo">
-								<img src="images/stations/lores/vox_de.png" />
-							</div>
-							<span class="epg">20:15 bis 21:10 - Rizzoli &amp; Isles</span>
-						</button>
-					</div>
-				</div>
-
-				<ul data-role="listview" data-filter="true" data-filter-placeholder="<%= str.filter %>" data-inset="true" data-autodividers="true" id="channelslist">
-					<% for(var i = 0, n = channels.length; i<n; i++) { %>
-					<li><%- link_to(channels[i].name, 'channel/'+channels[i].idx) %></li>
+					<% for(var i = 0, n = favs.length; i<n; i++) { %>
+						<div class="ui-block-<%= String.fromCharCode(97 + i%5) %>">
+							<a type="button" data-theme="c" href="<%= '/channel/'+channels[i].idx %>">
+								<span class="title"><%= favs[i].name %></span>
+								<div class="logo">
+									<img src="images/stations/lores/<%= favs[i].logo %>" />
+								</div>
+								<span class="epg">20:15 bis 21:45: Herbstkind</span>
+							</a>
+						</div>
 					<% } %>
-				</ul>
+				</div>
+				
+				<div class="ui-body ui-body-c ui-btn-corner-all">
+					<h1>Alle Sender</h1>
+					<ul data-role="listview" data-filter="true" data-filter-placeholder="<%= str.filter %>" data-inset="true" data-autodividers="true" id="channelslist">
+						<% for(var i = 0, n = channels.length; i<n; i++) { %>
+						<li><a href="<%= '/channel/'+channels[i].idx %>"><%= channels[i].name %></a></li>
+						<% } %>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</body>

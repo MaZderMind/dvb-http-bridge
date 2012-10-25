@@ -44,15 +44,18 @@ app.configure('development', function(){
 console.log('loading routes');
 var
 	routes = require('./routes'),
-	channels = require('./routes/channels');
+	channels = require('./routes/channels'),
+	favs = require('./routes/favs');
 
 app.get('/', routes.index);
 app.get('/channels', channels.list);
+app.get('/favs', favs.list);
 
 // run init tasks 
 async.parallel([
 
 	channels.load,
+	favs.load,
 
 ], function(err) {
 	if(err)

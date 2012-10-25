@@ -3,11 +3,15 @@
  * GET home page.
  */
 
-var channels = require(app.path('routes/channels'));
+var
+	strings = require(app.path('strings/de')),
+	channels = require(app.path('routes/channels'));
+	favs = require(app.path('routes/favs'));
 
 exports.index = function(req, res){
 	res.render('index', {
-		str: require(app.path('strings/de')),
-		channels: channels.get()
+		str: strings,
+		channels: channels.get(),
+		favs: favs.get(),
 	});
 };

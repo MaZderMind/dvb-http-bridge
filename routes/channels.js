@@ -19,7 +19,7 @@ exports.load = function(cb){
 			if(line.length == 0) return;
 
 			line = line.split(':');
-			channels.push({idx: ++n, name: line[0], fav: false});
+			channels.push({idx: ++n, name: line[0]});
 		});
 
 		var validRe = /^[a-z0-9]/i;
@@ -40,10 +40,6 @@ exports.load = function(cb){
 		console.log('loaded', channels.length, 'channels')
 		cb();
 	});
-};
-
-exports.get = function() {
-	return channels;
 };
 
 exports.get = function() {
