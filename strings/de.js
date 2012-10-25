@@ -1,5 +1,7 @@
 module.exports = {
 	title: 'IntraneTV',
 	favs: 'Favoriten',
-	allchannels: "Alle Sender"
+	editfavs: 'Bearbeiten',
+	allchannels: "Alle Sender",
+	filter: 'Suchen',
 }

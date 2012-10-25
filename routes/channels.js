@@ -22,6 +22,21 @@ exports.load = function(cb){
 			channels.push({idx: ++n, name: line[0], fav: false});
 		});
 
+		var validRe = /^[a-z0-9]/i;
+		channels = channels.filter(function(n) {
+			return validRe.test(n.name);
+		});
+
+		channels.sort(function(a, b) {
+			var
+				an = a.name.toLowerCase();
+				bn = b.name.toLowerCase();
+			
+			if(an < bn) return -1;
+			else if(an > bn) return 1;
+			else return 0;
+		});
+
 		console.log('loaded', channels.length, 'channels')
 		cb();
 	});

@@ -9,12 +9,16 @@
 		<link rel="stylesheet" href="/stylesheets/app.css" />
 		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
+		<script src="/javascripts/app.js"></script>
 	</head>
 	<body>
 		<div data-role="page">
-			<div data-role="content">
-				<h1 data-role="header" data-theme="f"><%= str.title %></h1>
+			<div data-role="header">
+				<h1><%= str.title %></h1>
+				<a href="index.html" data-icon="star" class="ui-btn-right"><%= str.editfavs %></a>
+			</div>
 
+			<div data-role="content">
 				<div class="ui-grid-d favs">
 					<div class="ui-block-a">
 						<button type="button" data-theme="c">
@@ -63,8 +67,7 @@
 					</div>
 				</div>
 
-				<ul data-role="listview">
-					<li data-role="list-divider"><%= str.allchannels %></li>
+				<ul data-role="listview" data-filter="true" data-filter-placeholder="<%= str.filter %>" data-inset="true" data-autodividers="true" id="channelslist">
 					<% for(var i = 0, n = channels.length; i<n; i++) { %>
 					<li><%- link_to(channels[i].name, 'channel/'+channels[i].idx) %></li>
 					<% } %>
