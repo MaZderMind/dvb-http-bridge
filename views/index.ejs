@@ -15,14 +15,13 @@
 		<div data-role="page">
 			<div data-role="header">
 				<h1><%= str.title %></h1>
-				<a href="javascipt:;" data-icon="star" class="ui-btn-right" id="editbtn"><%= str.editfavs %></a>
 			</div>
 
 			<div data-role="content">
-				<div class="ui-grid-d favs">
+				<div class="ui-grid-d" id="favs">
 					<% for(var i = 0, n = favs.length; i<n; i++) { %>
 						<div class="ui-block-<%= String.fromCharCode(97 + i%5) %>">
-							<a type="button" data-theme="c" href="<%= '/channel/'+channels[i].idx %>">
+							<a type="button" data-theme="c" href="#channel" data-channel="<%= channels[i].idx %>">
 								<span class="title"><%= favs[i].name %></span>
 								<div class="logo">
 									<img src="images/stations/lores/<%= favs[i].logo %>" />
@@ -37,10 +36,21 @@
 					<h1>Alle Sender</h1>
 					<ul data-role="listview" data-filter="true" data-filter-placeholder="<%= str.filter %>" data-inset="true" data-autodividers="true" id="channelslist">
 						<% for(var i = 0, n = channels.length; i<n; i++) { %>
-						<li><a href="<%= '/channel/'+channels[i].idx %>"><%= channels[i].name %></a></li>
+						<li><a href="#channel" data-channel="<%= channels[i].idx %>"><%= channels[i].name %></a></li>
 						<% } %>
 					</ul>
 				</div>
+			</div>
+		</div>
+
+		<div data-role="dialog" id="channel">
+			<div data-role="header">
+				<h1>Titel</h1>
+			</div>
+
+			<div data-role="content">
+				<h2>Titel</h2>
+				<img src="javascript:;" alt="Titel" />
 			</div>
 		</div>
 	</body>

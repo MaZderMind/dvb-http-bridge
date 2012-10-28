@@ -5,20 +5,21 @@ $(function() {
 		return pattern.toLowerCase() != text.substr(0, pattern.length).toLowerCase();
 	});
 
-	$('#editbtn').on('vclick', function(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		isEditingFavs = $(this)
-			.toggleClass($.mobile.activeBtnClass)
-			.hasClass($.mobile.activeBtnClass);
-		
-		$('#channelslist .ui-icon')
-			.toggleClass('ui-icon-star', isEditingFavs);
+	$('#channelslist, #favs').bind('vclick', '.ui-btn', function(e) {
+		var
+			$btn = $(e.target).closest('.ui-btn');
+			$logo = $btn.find('.logo img');
+
+		var $content = $('#channel div[data-role=content]');
+		if($logo.length > 0)
+			$content.find('img').attr('src', $logo.attr('src')).css({'display': 'block'});
+		else
+			$content.find('img').css({'display': 'none'});
 	});
 
-	$('#channelslist').bind('vclick', '.ui-btn', function(e) {
-		if(isEditingFavs) {
-			alert('add to fav');
+	$('#channel').bind({
+		create: function(event, ui) {
+			console.log('onCreate');
 		}
 	});
 });

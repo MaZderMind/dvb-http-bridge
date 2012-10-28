@@ -43,11 +43,11 @@ app.configure('development', function(){
 
 console.log('loading routes');
 var
-	routes = require('./routes'),
+	gui = require('./routes/gui'),
 	channels = require('./routes/channels'),
 	favs = require('./routes/favs');
 
-app.get('/', routes.index);
+app.get('/', gui.index);
 app.get('/channels', channels.list);
 app.get('/favs', favs.list);
 
