@@ -1,19 +1,64 @@
 .boxlayout (@orient, @pack: center, @align: center) {
-	/* Firefox */
 	display: -moz-box;
 	-moz-box-orient: @orient;
 	-moz-box-pack: @pack;
 	-moz-box-align: @align;
 
-	/* Safari and Chrome */
 	display: -webkit-box;
 	-webkit-box-orient: @orient;
 	-webkit-box-pack: @pack;
 	-webkit-box-align: @align;
 
-	/* W3C */
 	display: box;
 	box-orient: @orient;
 	box-pack: @pack;
 	box-align: @align;
+}
+
+.radial-gradient (@fallback, @stop1, @stop2) {
+	background: @fallback;
+	background: -moz-radial-gradient(center, ellipse cover, @stop1, @stop2);
+	background: -webkit-radial-gradient(center, ellipse cover, @stop1, @stop2);
+	background: -o-radial-gradient(center, ellipse cover, @stop1, @stop2);
+	background: -ms-radial-gradient(center, ellipse cover, @stop1, @stop2);
+	background: radial-gradient(ellipse at center, @stop1, @stop2);
+}
+
+.radial-gradient (@fallback, @stop1, @stop2, @stop3) {
+	background: @fallback;
+	background: -moz-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3);
+	background: -webkit-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3);
+	background: -o-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3);
+	background: -ms-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3);
+	background: radial-gradient(ellipse at center, @stop1, @stop2, @stop3);
+}
+
+.radial-gradient (@fallback, @stop1, @stop2, @stop3, @stop4) {
+	background: @fallback;
+	background: -moz-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3, @stop4);
+	background: -webkit-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3, @stop4);
+	background: -o-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3, @stop4);
+	background: -ms-radial-gradient(center, ellipse cover, @stop1, @stop2, @stop3, @stop4);
+	background: radial-gradient(ellipse at center, @stop1, @stop2, @stop3, @stop4);
+}
+
+.animation (@name, @duration) {
+	animation: @arguments;
+	-moz-animation: @arguments;
+	-webkit-animation: @arguments;
+	-o-animation: @arguments;
+}
+
+.animation-iteration-count(@count) {
+	animation-iteration-count: @count;
+	-moz-animation-iteration-count: @count;
+	-webkit-animation-iteration-count: @count;
+	-o-animation-iteration-count: @count;
+}
+
+.animation-direction(@direction) {
+	animation-direction: @direction;
+	-moz-animation-direction: @direction;
+	-webkit-animation-direction: @direction;
+	-o-animation-direction: @direction;
 }

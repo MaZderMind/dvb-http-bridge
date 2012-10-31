@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><%= str.title %></title>
+		<title><%= ll.title %></title>
 
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.css" />
 		<link rel="stylesheet" href="/stylesheets/app.css" />
-		<script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-		<script src="/javascripts/app.js"></script>
+		<script type="text/javascript">var ll = <%- JSON.stringify(ll) %></script>
+		<script src="/javascripts/client.js"></script>
 	</head>
 	<body>
+
 		<div data-role="page">
-			<div data-role="header">
-				<h1><%= str.title %></h1>
+			<div data-role="header" data-position="fixed" class="header-playing">
+				<h1></h1>
+				<div data-role="header" class="header-playing-inner">
+					<h1></h1>
+				</div>
+			</div>
+			<div data-role="header" class="header-title">
+				<h1><%= ll.title %></h1>
 			</div>
 
 			<div data-role="content">
 				<div class="ui-grid-d" id="favs">
 					<% for(var i = 0, n = favs.length; i<n; i++) { %>
 						<div class="ui-block-<%= String.fromCharCode(97 + i%5) %>">
-							<a type="button" data-theme="c" href="#channel" data-channel="<%= channels[i].idx %>">
+							<a type="button" data-theme="c" href="#channel" data-channel="<%= favs[i].idx %>">
 								<span class="title"><%= favs[i].name %></span>
 								<div class="logo">
 									<img src="images/stations/lores/<%= favs[i].logo %>" />
@@ -34,23 +42,22 @@
 				
 				<div class="ui-body ui-body-c ui-btn-corner-all">
 					<h1>Alle Sender</h1>
-					<ul data-role="listview" data-filter="true" data-filter-placeholder="<%= str.filter %>" data-inset="true" data-autodividers="true" id="channelslist">
+					<ul data-role="listview" data-filter="true" data-filter-placeholder="<%= ll.filter %>" data-inset="true" data-autodividers="true" id="channelslist">
 						<% for(var i = 0, n = channels.length; i<n; i++) { %>
 						<li><a href="#channel" data-channel="<%= channels[i].idx %>"><%= channels[i].name %></a></li>
 						<% } %>
 					</ul>
 				</div>
 			</div>
-		</div>
 
-		<div data-role="dialog" id="channel">
-			<div data-role="header">
-				<h1>Titel</h1>
-			</div>
-
-			<div data-role="content">
-				<h2>Titel</h2>
-				<img src="javascript:;" alt="Titel" />
+			<div data-role="popup" id="error-popup" data-overlay-theme="a">
+				<div data-role="header" class="ui-corner-top">
+					<h1><%= ll.tuningError %></h1>
+				</div>
+				<div data-role="content" class="ui-corner-bottom ui-content">
+					<p><%= ll.tuningErrorMsg %></p>
+					<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c"><%= ll.cancel %></a>
+				</div>
 			</div>
 		</div>
 	</body>
