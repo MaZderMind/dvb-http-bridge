@@ -6,7 +6,8 @@
 var
 	fs = require('fs'),
 	iconv = require('iconv-lite'),
-	channels = [];
+	channels = [],
+	channelNames = {};
 
 
 exports.load = function(cb){
@@ -27,8 +28,7 @@ exports.load = function(cb){
 			return validRe.test(n.name);
 		});
 
-channels = channels.slice(0, 20);
-
+		channels = channels.slice(0, 20);
 		channels.sort(function(a, b) {
 			var
 				an = a.name.toLowerCase();

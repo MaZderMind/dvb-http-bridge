@@ -17,20 +17,18 @@ $(document).bind('pageinit', function() {
 	});
 
 	$('#channelslist, #favs').bind('vclick', '.ui-btn', function(e) {
-		var
-			$a = $(e.target).closest('a'),
-			$title = $a.find('.title'),
-			channel = $a.data('channel'),
-			title = $title.length > 0 ? $title.text() : $a.text();
-		
-			if($a.length == 0) return;
+		var $a = $(e.target).closest('a');		
+		if($a.length == 0) return;
 
 		var
+			$title = $a.find('.title'),
+			channel = $a.data('channel'),
+			name = $title.length > 0 ? $title.text() : $a.text(),
 			$header = $('.header-playing'),
 			$headerTxt = $('.header-playing h1, .header-playing-inner h1');
 
 		$headerTxt.text(
-			ll.template('tuning', {channel: title}));
+			ll.template('tuning', {channel: name}));
 
 		$header.animate({height: 42})
 		$.ajax({
@@ -39,9 +37,9 @@ $(document).bind('pageinit', function() {
 			success: function(res) {
 				if(res.success) {
 					$headerTxt.text(
-						ll.template('playing', {channel: title}));
+						ll.template('playing', {channel: name}));
 
-					window.location.href = res.playerurl;
+					//window.location.href = res.playerurl;
 				}
 			},
 			error: function() {

@@ -42,13 +42,15 @@ app.configure('development', function(){
 
 console.log('loading routes');
 var
-	gui = require('./routes/gui'),
-	channels = require('./routes/channels'),
-	favs = require('./routes/favs');
+	gui = require(app.path('routes/gui')),
+	channels = require(app.path('routes/channels')),
+	favs = require(app.path('routes/favs')),
+	tuning = require(app.path('routes/tuning'));
 
 app.get('/', gui.index);
 app.get('/channels', channels.list);
 app.get('/favs', favs.list);
+app.get('/tune/:channel', tuning.tuneto);
 
 // run init tasks 
 async.parallel([

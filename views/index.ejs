@@ -15,10 +15,10 @@
 	<body>
 
 		<div data-role="page">
-			<div data-role="header" data-position="fixed" class="header-playing">
-				<h1></h1>
+			<div data-role="header" data-position="fixed" class="header-playing" style="height: <%= (tuned ? 42 : 0) %>px">
+				<h1><%= ll.template('playing', {channel: tuned ? tuned.name : ''}) %></h1>
 				<div data-role="header" class="header-playing-inner">
-					<h1></h1>
+					<h1><%= ll.template('playing', {channel: tuned ? tuned.name : ''}) %></h1>
 				</div>
 			</div>
 			<div data-role="header" class="header-title">
@@ -56,7 +56,8 @@
 				</div>
 				<div data-role="content" class="ui-corner-bottom ui-content">
 					<p><%= ll.tuningErrorMsg %></p>
-					<a href="#" data-role="button" data-inline="true" data-rel="back" data-theme="c"><%= ll.cancel %></a>
+					<br />
+					<a href="#" data-role="button" data-rel="back" data-theme="c"><%= ll.cancel %></a>
 				</div>
 			</div>
 		</div>
