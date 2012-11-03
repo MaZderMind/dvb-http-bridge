@@ -21,10 +21,10 @@ exports.load = function(cb){
 	});
 };
 
-exports.get = function() {
+exports.getList = function() {
 	return favs;
 };
 
-exports.list = function(req, res){
-	res.send(favs);
+exports.listReq = function(req, res){
+	res.send(this.getList());
 };

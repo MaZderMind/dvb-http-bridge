@@ -34,12 +34,17 @@ $(document).bind('pageinit', function() {
 		$.ajax({
 			url: '/tune/'+channel,
 			dataType: 'json',
+			timeout: 2000,
 			success: function(res) {
 				if(res.success) {
 					$headerTxt.text(
 						ll.template('playing', {channel: name}));
 
 					//window.location.href = res.playerurl;
+				}
+				else {
+					$header.animate({height: 0}, {chain: true});
+					$('#error-popup').popup('open');
 				}
 			},
 			error: function() {

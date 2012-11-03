@@ -20,11 +20,11 @@ ll.template = function(key, parameter) {
 	return strtpl(ll[key], parameter);
 }
 
-exports.index = function(req, res) {
+exports.indexReq = function(req, res) {
 	res.render('index', {
 		ll: ll,
-		channels: channels.get(),
-		favs: favs.get(),
-		tuned: tuning.getStatus(),
+		channels: channels.getList(),
+		favs: favs.getList(),
+		tuningStatus: tuning.getStatus(),
 	});
 };

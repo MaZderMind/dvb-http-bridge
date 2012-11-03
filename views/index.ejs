@@ -15,10 +15,10 @@
 	<body>
 
 		<div data-role="page">
-			<div data-role="header" data-position="fixed" class="header-playing" style="height: <%= (tuned ? 42 : 0) %>px">
-				<h1><%= ll.template('playing', {channel: tuned ? tuned.name : ''}) %></h1>
+			<div data-role="header" data-position="fixed" class="header-playing" style="height: <%= (tuningStatus.isTuned ? 42 : 0) %>px">
+				<h1><%= ll.template('playing', {channel: tuningStatus.isTuned ? tuningStatus.name : ''}) %></h1>
 				<div data-role="header" class="header-playing-inner">
-					<h1><%= ll.template('playing', {channel: tuned ? tuned.name : ''}) %></h1>
+					<h1><%= ll.template('playing', {channel: tuningStatus.isTuned ? tuningStatus.name : ''}) %></h1>
 				</div>
 			</div>
 			<div data-role="header" class="header-title">

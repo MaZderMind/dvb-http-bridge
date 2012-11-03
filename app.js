@@ -47,10 +47,10 @@ var
 	favs = require(app.path('routes/favs')),
 	tuning = require(app.path('routes/tuning'));
 
-app.get('/', gui.index);
-app.get('/channels', channels.list);
-app.get('/favs', favs.list);
-app.get('/tune/:channel', tuning.tuneto);
+app.get('/', gui.indexReq);
+app.get('/channels', channels.listReq);
+app.get('/favs', favs.listReq);
+app.get('/tune/:channel', tuning.tuneToReq);
 
 // run init tasks 
 async.parallel([

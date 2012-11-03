@@ -10,7 +10,7 @@ var
 	channelNames = {};
 
 
-exports.load = function(cb){
+function load(cb){
 	console.log('loading channels list');
 	fs.readFile(app.path('data/channels.conf'), function(err, data) {
 		if (err) throw err;
@@ -44,10 +44,24 @@ exports.load = function(cb){
 	});
 };
 
-exports.get = function() {
+function getList() {
 	return channels;
 };
 
-exports.list = function(req, res){
-	res.send(channels);
+function getByIdx(idx) {
+	for (var i = channels.length - 1; i >= 0; i--) {
+		if(channels[i].idx == idx)
+			return channels[i];
+	};
+
+	return false;
 };
+
+function listReq(req, res){
+	res.send(getList());
+};
+
+exports.load = load;
+exports.getList = getList;
+exports.getByIdx = getByIdx;
+exports.listReq = listReq;
