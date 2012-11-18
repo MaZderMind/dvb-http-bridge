@@ -29,20 +29,20 @@
 	to { opacity: 0; }
 }
 
-.header-playing {
+.header .playing {
 	.radial-gradient(#5ec95e, #5ec95e 0%, #008a00 67%, #007700 100%);
 
-	overflow: hidden;
-	height: 0px;
-}
-
-.header-playing-inner {
-	.radial-gradient(#256f25, #256f25 0%, #004600 67%, #003c00 100%);
-
 	position: absolute;
+	overflow: hidden;
 	top: 0;
 	left: 0;
 	width: 100%;
+	height: 0px;
+}
+
+.header .playing.inner {
+	.radial-gradient(#256f25, #256f25 0%, #004600 67%, #003c00 100%);
+
 	height: 100%;
 
 	.animation(header-playing-pulse, 1s);

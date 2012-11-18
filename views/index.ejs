@@ -9,20 +9,20 @@
 		<link rel="stylesheet" href="/stylesheets/app.css" />
 		<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-		<script type="text/javascript">var ll = <%- JSON.stringify(ll) %></script>
+		<script type="text/javascript">var ll = <%- JSON.stringify(ll) %>; var tuningStatus = <%- JSON.stringify(tuningStatus) %>;</script>
 		<script src="/javascripts/client.js"></script>
 	</head>
 	<body>
 
 		<div data-role="page">
-			<div data-role="header" data-position="fixed" class="header-playing" style="height: <%= (tuningStatus.isTuned ? 42 : 0) %>px">
-				<h1><%= ll.template('playing', {channel: tuningStatus.isTuned ? tuningStatus.name : ''}) %></h1>
-				<div data-role="header" class="header-playing-inner">
-					<h1><%= ll.template('playing', {channel: tuningStatus.isTuned ? tuningStatus.name : ''}) %></h1>
-				</div>
-			</div>
-			<div data-role="header" class="header-title">
+			<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header">
 				<h1><%= ll.title %></h1>
+				<div class="playing">
+					<h1 class="ui-title">playing</h1>
+					<div class="playing inner">
+						<h1 class="ui-title">playing</h1>
+					</div>
+				</div>
 			</div>
 
 			<div data-role="content">
@@ -52,10 +52,10 @@
 
 			<div data-role="popup" id="error-popup" data-overlay-theme="a">
 				<div data-role="header" class="ui-corner-top">
-					<h1><%= ll.tuningError %></h1>
+					<h1><%= ll.tuningErrorTitle %></h1>
 				</div>
 				<div data-role="content" class="ui-corner-bottom ui-content">
-					<p><%= ll.tuningErrorMsg %></p>
+					<p><%= ll.tuningError %></p>
 					<br />
 					<a href="#" data-role="button" data-rel="back" data-theme="c"><%= ll.cancel %></a>
 				</div>

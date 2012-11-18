@@ -10,22 +10,30 @@ ll.template = function(key, parameter) {
 }
 
 $(document).bind('pageinit', function() {
-	var isEditingFavs = false;
+	var
+		isEditingFavs = false,
+		$header = $('.header .playing'),
+		$headerTxt = $('.header .playing h1');
+
+
+	if(tuningStatus.isTuned) {
+		$header.css('height', 42);
+		$headerTxt.text(
+			ll.template('playing', {channel: tuningStatus.name}));
+	}
 
 	$('#channelslist').listview('option', 'filterCallback', function(text, pattern) {
 		return pattern.toLowerCase() != text.substr(0, pattern.length).toLowerCase();
 	});
 
 	$('#channelslist, #favs').bind('vclick', '.ui-btn', function(e) {
-		var $a = $(e.target).closest('a');		
+		var $a = $(e.target).closest('a');
 		if($a.length == 0) return;
 
 		var
 			$title = $a.find('.title'),
 			channel = $a.data('channel'),
-			name = $title.length > 0 ? $title.text() : $a.text(),
-			$header = $('.header-playing'),
-			$headerTxt = $('.header-playing h1, .header-playing-inner h1');
+			name = $title.length > 0 ? $title.text() : $a.text();
 
 		$headerTxt.text(
 			ll.template('tuning', {channel: name}));

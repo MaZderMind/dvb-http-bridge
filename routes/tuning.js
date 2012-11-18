@@ -4,11 +4,20 @@ var isTuned = false,
 	currentChannel;
 
 function tuneTo(channel) {
-	console.log('Tuning to channel', channel);
-	currentChannel = channel;
-	isTuned = true;
+	var channelInfo = channels.getByIdx(channel);
+	if(channelInfo) {
+		console.log('Tuning to channel',
+			channelInfo.idx, channelInfo.name);
 
-	return true;
+		currentChannel = channel;
+		isTuned = true;
+
+		return true;
+	}
+	else {
+		console.log('Unknown channel', channel);
+		return false;
+	}
 };
 
 function tuneToReq(req, res) {
