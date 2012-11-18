@@ -5,7 +5,8 @@
 console.log('loading modules');
 var path = require('path'),
 	express = require('express'),
-	expresshelpers = require('express-helpers'),
+	expressHelpers = require('express-helpers')
+	lessMiddleware = require('less-middleware'),
 	http = require('http'),
 	path = require('path'),
 	async = require('async');
@@ -30,10 +31,10 @@ app.configure(function(){
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(app.router);
-	app.use(require('less-middleware')({ src: app.path('public') }));
+	app.use(lessMiddleware({ src: app.path('public') }));
 	app.use(express.static(app.path('public')));
 
-	expresshelpers(app);
+	expressHelpers(app);
 });
 
 app.configure('development', function(){
@@ -45,12 +46,14 @@ var
 	gui = require(app.path('routes/gui')),
 	channels = require(app.path('routes/channels')),
 	favs = require(app.path('routes/favs')),
-	tuning = require(app.path('routes/tuning'));
+	tuning = require(app.path('routes/tuning')),
+	stream = require(app.path('routes/stream'));
 
 app.get('/', gui.indexReq);
 app.get('/channels', channels.listReq);
 app.get('/favs', favs.listReq);
 app.get('/tune/:channel', tuning.tuneToReq);
+app.get('/stream/', stream.streamReq);
 
 // run init tasks 
 async.parallel([

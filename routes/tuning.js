@@ -11,48 +11,40 @@ function tuneTo(channel, cb) {
 	}, 1000);
 };
 
+function tuneOff() {
+	currentChannel = undefined;
+	isTuned = false;
+};
+
 function tuneToReq(req, res) {
 	var channel = parseInt(req.params.channel);
 	var channelInfo = channels.getByIdx(channel);
-	
-	function sendResponse(success)
-	{
-		if(success) {
-			res.send({
-				success: true,
 
-				isTuned: true,
-				idx: channelInfo.idx,
-				name: channelInfo.name
-			});
-		}
-		else {
-			if(isTuned) {
-				var currentChannelInfo = channels.getByIdx(currentChannel);
+	if(!channelInfo) {
+		console.log('Not tuning to unknown channel', channel);
+		tuneOff();
+		res.send({
+			success: false
+		});
+	}
+	else {
+		console.log('Tuning to channel', channel, channelInfo.name);
+		tuneTo(channel, function(success) {
+			if(success) {
 				res.send({
-					success: false,
+					success: true,
 
 					isTuned: true,
-					idx: currentChannelInfo.idx,
-					name: currentChannelInfo.name
+					idx: channelInfo.idx,
+					name: channelInfo.name
 				});
 			}
 			else {
 				res.send({
-					success: false,
-					isTuned: false
+					success: false
 				});
 			}
-		}
-	}
-
-	if(!channelInfo) {
-		console.log('Not tuning to unknown channel', channel);
-		sendResponse(false);
-	}
-	else {
-		console.log('Tuning to channel', channel, channelInfo.name);
-		tuneTo(channel, sendResponse);
+		});
 	}
 };
 

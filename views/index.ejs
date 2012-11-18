@@ -9,13 +9,17 @@
 		<link rel="stylesheet" href="/stylesheets/app.css" />
 		<script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
 		<script src="http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min.js"></script>
-		<script type="text/javascript">var ll = <%- JSON.stringify(ll) %>; var tuningStatus = <%- JSON.stringify(tuningStatus) %>;</script>
+		<script type="text/javascript">
+			var ll = <%- JSON.stringify(ll) %>;
+			var tuningStatus = <%- JSON.stringify(tuningStatus) %>;
+			var playerUrl = <%- JSON.stringify(playerUrl) %>;
+		</script>
 		<script src="/javascripts/client.js"></script>
 	</head>
 	<body>
 
 		<div data-role="page">
-			<div data-role="header" data-position="fixed" data-tap-toggle="false" class="header">
+			<div data-role="header" data-position="fixed" data-tap-toggle="false" id="header">
 				<h1><%= ll.title %></h1>
 				<div class="playing">
 					<h1 class="ui-title">playing</h1>
