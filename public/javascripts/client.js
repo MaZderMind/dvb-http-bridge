@@ -48,10 +48,27 @@ $(document).bind('pageinit', function() {
 					$headerTxt.text(
 						ll.template('playing', {channel: name}));
 
-					//window.location.href = res.playerurl;
+					tuningStatus.name = res.name;
+					tuningStatus.idx = res.idx;
+					tuningStatus.isTuned = true;
+				}
+				else if(res.isTuned) {
+					$headerTxt.text(
+						ll.template('playing', {channel: res.name}));
+
+					tuningStatus.name = res.name;
+					tuningStatus.idx = res.idx;
+					tuningStatus.isTuned = true;
+
+					$('#error-popup').popup('open');
 				}
 				else {
 					$header.animate({height: 0}, {chain: true});
+
+					delete tuningStatus.name;
+					delete tuningStatus.idx;
+					tuningStatus.isTuned = false;
+
 					$('#error-popup').popup('open');
 				}
 			},
