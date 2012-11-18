@@ -1,18 +1,44 @@
-var channels = require(app.path('routes/channels'));
+var
+	channels = require(app.path('routes/channels')),
+	spawn = require('child_process').spawn;
 
 var isTuned = false,
-	currentChannel;
+	currentChannel = null,
+	zap = null;
 
 function tuneTo(channel, cb) {
-	setTimeout(function() {
-		currentChannel = channel;
-		isTuned = true;
-		cb(true);
-	}, 1000);
+	if(zap) {
+		console.log('killing zap');
+		zap.kill('SIGHUP');
+	}
+
+	console.log('spawning zap');
+	zap = spawn('szap', ['-c', app.path('data/channels.conf'), '-rHn', channel]);
+
+//	zap.stdout.on('data', function (data) {
+//		console.log('zap stdout: ' + data);
+//	});
+
+	zap.stderr.on('data', function (data) {
+		console.log('zap stderr: ' + data);
+	});
+
+	zap.on('exit', function (code) {
+		console.log('zap exited with code ' + code);
+	});
+
+	currentChannel = channel;
+	isTuned = true;
+	cb(true);
 };
 
 function tuneOff() {
-	currentChannel = undefined;
+	if(zap) {
+		console.log('killing zap');
+		zap.kill('SIGHUP');
+	}
+
+	currentChannel = null;
 	isTuned = false;
 };
 
@@ -71,6 +97,7 @@ function statusReq(req, res) {
 };
 
 exports.tuneTo = tuneTo;
+exports.tuneOff = tuneOff;
 exports.getStatus = getStatus;
 
 exports.tuneToReq = tuneToReq;

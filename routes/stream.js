@@ -26,7 +26,7 @@ function streamReq(req, res) {
 		disconnected = false,
 		fullTimeout = null;
 
-	console.log(clientNum, 'streaming client joined (now', ++clientOnlineCnt, ' clients online)');
+	console.log(clientNum, 'streaming client joined (now '+(++clientOnlineCnt)+' clients online)');
 	if(tuneOffTimeout) {
 		clearTimeout(tuneOffTimeout);
 		tuneOffTimeout = null;
@@ -48,7 +48,7 @@ function streamReq(req, res) {
 	}
 
 	req.on('close', function() {
-		console.log(clientNum, 'streaming client left (now', --clientOnlineCnt, ' clients online)');
+		console.log(clientNum, 'streaming client left (now '+(--clientOnlineCnt)+' clients online)');
 		stream.removeListener('data', pipeFn);
 		clearTimeout(fullTimeout);
 

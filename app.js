@@ -67,4 +67,4 @@ async.parallel([
 
 	console.log('listening');
 	app.listen(app.get('port'));
-})
+});
