@@ -110,14 +110,14 @@ loadChannelsList(function(channels) {
 			{
 				activeZap.on('close', function() {
 					console.log("zap closed, restarting with new channel "+channel);
-					activeZap = spawn(cmd, args);
+					activeZap = spawn(cmd, args, {stdio: 'inherit'});
 				})
 				activeZap.kill();
 			}
 			else
 			{
 				console.log("starting zap with new channel "+channel);
-				activeZap = spawn(cmd, args);
+				activeZap = spawn(cmd, args, {stdio: 'inherit'});
 			}
 
 			return;
