@@ -12,6 +12,8 @@ var
 
 http.ServerResponse.prototype.endPlaintextAndLog = function(code, msg) {
 	console[msg == 200 ? 'info' : 'warn'](msg);
+
+	msg += "\n";
 	this.writeHead(code, {'Content-Length': Buffer.byteLength(msg, 'utf8'), 'Content-Type': 'text/plain; charset=utf-8' });
 	this.end(msg, 'utf-8');
 }
@@ -67,7 +69,7 @@ loadChannelsList(function(channels) {
 		// handle /channels requests
 		if(purl.pathname == '/channels')
 		{
-			return response.endPlaintext(channels.join("\n")+"\n");
+			return response.endPlaintext(channels.join("\n"));
 		}
 
 		// handle /zap/ZDF-like requests
