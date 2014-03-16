@@ -29,9 +29,12 @@ loadChannelsList(function(channels) {
 	})
 
 	stream.on('data', function(chunk) {
+		console.log('got %d bytes of data', chunk.length);
 		if(activeConnection)
 			activeConnection.write(chunk);
 	})
+
+	stream.resume();
 
 
 
@@ -85,11 +88,14 @@ loadChannelsList(function(channels) {
 					break;
 
 				case 'zap':
-					var cmd = 'szap -Hc '+channelFile+'"'+arg+'"';
+					var
+						cmd = 'szap',
+						args = ['-r', '-H', '-c', channelFile, arg];
+
 					if(activeZap)
 					{
 						activeZap.on('close', function() {
-							activeZap = spawn(cmd);
+							activeZap = spawn(cmd, args);
 							connection.write("zap closed, restarting with new channel\n");
 						})
 						activeZap.kill();
@@ -97,7 +103,7 @@ loadChannelsList(function(channels) {
 					else
 					{
 						connection.write("starting zap with new channel\n");
-						activeZap = spawn(cmd);
+						activeZap = spawn(cmd, args);
 					}
 					break;
 
