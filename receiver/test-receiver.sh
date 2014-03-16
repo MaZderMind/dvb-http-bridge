@@ -1,2 +1,3 @@
-#!/bin/bash
-cat <(echo 'zap ZDF') - | nc fluxbox 5885 | mplayer -cache 1024 -
+#!/bin/sh
+curl -s http://fluxbox:5885/zap/ZDF | mplayer -cache 1024 -
+
