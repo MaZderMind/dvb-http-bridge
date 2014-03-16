@@ -10,6 +10,12 @@ var
 	channelFile = '../data/channels.conf';
 
 
+net.Socket.prototype.write_and_log = function(data)
+{
+	console.info(data);
+	this.write(data+"\n");
+}
+
 console.log('loading channels list');
 loadChannelsList(function(channels) {
 	console.log('loaded', channels.length, 'channels')
@@ -29,7 +35,6 @@ loadChannelsList(function(channels) {
 	})
 
 	stream.on('data', function(chunk) {
-		console.log('got %d bytes of data', chunk.length);
 		if(activeConnection)
 			activeConnection.write(chunk);
 	})
@@ -51,10 +56,23 @@ loadChannelsList(function(channels) {
 			return;
 		}
 
+		var
+			remoteAddress = connection.remoteAddress,
+			remotePort = connection.remotePort;
 		activeConnection = connection;
-		connection.on('end', function() {
-			connection.end(connection.remoteAddress+':'+connection.remotePort+' closed the connection');
+		connection.on('close', function() {
+			console.log(remoteAddress+':'+remotePort+' closed the connection');
 			activeConnection = null;
+
+			if(activeZap)
+			{
+				console.log("going to idle");
+				activeZap.on('close', function() {
+					activeZap = null;
+					console.log("now idle");
+				})
+				activeZap.kill();
+			}
 		});
 		connection.on('data', function(data) {
 			var
@@ -71,19 +89,25 @@ loadChannelsList(function(channels) {
 					connection.write(channels.join("\n")+"\n");
 					break;
 
+				case 'quit':
+					connection.write_and_log("closing connecion on request");
+					connection.end()
+					break;
+
+
 				case 'close':
 					if(activeZap)
 					{
-						connection.write("going to idle\n");
+						connection.write_and_log("going to idle");
 						activeZap.on('close', function() {
 							activeZap = null;
-							connection.write("now idle\n");
+							connection.write_and_log("now idle");
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write("staying idle\n");
+						connection.write_and_log("staying idle");
 					}
 					break;
 
@@ -96,13 +120,13 @@ loadChannelsList(function(channels) {
 					{
 						activeZap.on('close', function() {
 							activeZap = spawn(cmd, args);
-							connection.write("zap closed, restarting with new channel\n");
+							connection.write_and_log("zap closed, restarting with new channel");
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write("starting zap with new channel\n");
+						connection.write_and_log("starting zap with new channel");
 						activeZap = spawn(cmd, args);
 					}
 					break;
