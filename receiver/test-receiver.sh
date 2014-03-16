@@ -1,3 +1,2 @@
-#!/bin/sh
-
-cat <(echo 'zap ZDF') - | nc fluxbox 5885 | pv > ZDF.ts
+#!/bin/bash
+cat <(echo 'zap ZDF') - | nc fluxbox 5885 | mplayer -cache 1024 -
