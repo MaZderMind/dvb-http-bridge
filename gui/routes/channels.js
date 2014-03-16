@@ -28,7 +28,6 @@ function load(cb){
 			return validRe.test(n.name);
 		});
 
-		channels = channels.slice(0, 20);
 		channels.sort(function(a, b) {
 			var
 				an = a.name.toLowerCase();
