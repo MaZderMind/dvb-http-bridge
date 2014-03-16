@@ -19,6 +19,7 @@ http.ServerResponse.prototype.endPlaintextAndLog = function(code, msg) {
 }
 
 http.ServerResponse.prototype.endPlaintext = function(msg) {
+	msg += "\n";
 	this.writeHead(200, {'Content-Length': Buffer.byteLength(msg, 'utf8'), 'Content-Type': 'text/plain; charset=utf-8' });
 	this.end(msg, 'utf-8');
 }
