@@ -10,6 +10,12 @@ var
 	channelFile = '../data/channels.conf';
 
 
+net.Socket.prototype.write_and_log = function(data)
+{
+	console.info(data);
+	this.write(data+"\n");
+}
+
 console.log('loading channels list');
 loadChannelsList(function(channels) {
 	console.log('loaded', channels.length, 'channels')
@@ -33,69 +39,100 @@ loadChannelsList(function(channels) {
 			activeConnection.write(chunk);
 	})
 
+	stream.resume();
+
 
 
 	console.log('opening tcp socket on port 5885')
-	var socket = dgram.createServer(function(connection) {
+	var socket = net.createServer(function(connection) {
 		console.log('connection from '+connection.remoteAddress+':'+connection.remotePort)
 		connection.setEncoding('utf8');
 
 		// only accept a single connection
-		if(currentConnection)
+		if(activeConnection)
 		{
-			console.log('rejectiong connection from '+connection.remoteAddress+':'+connection.remotePort+' because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
+			console.log('rejecting connection from '+connection.remoteAddress+':'+connection.remotePort+' because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
 			connection.end('rejectiong connection because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
 			return;
 		}
 
-		currentConnection = connection;
-		connection.on('end', function() {
-			connection.end(connection.remoteAddress+':'+connection.remotePort+' closed the connection');
-			currentConnection = null;
+		var
+			remoteAddress = connection.remoteAddress,
+			remotePort = connection.remotePort;
+		activeConnection = connection;
+		connection.on('close', function() {
+			console.log(remoteAddress+':'+remotePort+' closed the connection');
+			activeConnection = null;
+
+			if(activeZap)
+			{
+				console.log("going to idle");
+				activeZap.on('close', function() {
+					activeZap = null;
+					console.log("now idle");
+				})
+				activeZap.kill();
+			}
 		});
 		connection.on('data', function(data) {
 			var
-				parts = data.split(' ', 2),
+				parts = data.trim().split(' ', 2),
 				command = parts[0],
 				arg = parts[1];
 
+			if(command == '') return;
+
+			console.log('received command '+command);
 			switch(command)
 			{
 				case 'list':
-					connection.write(channels.join("\n"));
+					connection.write(channels.join("\n")+"\n");
 					break;
+
+				case 'quit':
+					connection.write_and_log("closing connecion on request");
+					connection.end()
+					break;
+
 
 				case 'close':
 					if(activeZap)
 					{
-						connection.write("going to idle");
+						connection.write_and_log("going to idle");
 						activeZap.on('close', function() {
 							activeZap = null;
-							connection.write("now idle");
+							connection.write_and_log("now idle");
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write("staying idle");
+						connection.write_and_log("staying idle");
 					}
 					break;
 
 				case 'zap':
-					var cmd = 'szap -Hc '+channelFile+'"'+arg+'"';
+					var
+						cmd = 'szap',
+						args = ['-r', '-H', '-c', channelFile, arg];
+
 					if(activeZap)
 					{
 						activeZap.on('close', function() {
-							activeZap = spawn(cmd);
-							connection.write("zap closed, restarting with new channel");
+							activeZap = spawn(cmd, args);
+							connection.write_and_log("zap closed, restarting with new channel");
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write("starting zap with new channel");
-						activeZap = spawn(cmd);
+						connection.write_and_log("starting zap with new channel");
+						activeZap = spawn(cmd, args);
 					}
+					break;
+
+				default:
+					console.warn('unknown command received: '+command);
 					break;
 			}
 		});
@@ -122,7 +159,6 @@ function loadChannelsList(cb){
 			return validRe.test(n);
 		});
 
-		channels = channels.slice(0, 20);
 		channels.sort(function(a, b) {
 			var
 				an = a.toLowerCase();

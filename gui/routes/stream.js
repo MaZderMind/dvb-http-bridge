@@ -24,7 +24,8 @@ function streamReq(req, res) {
 		clientNum = ++clientCnt,
 		full = false,
 		disconnected = false,
-		fullTimeout = null;
+		fullTimeout = null,
+		cutoffTimeout = null;
 
 	console.log(clientNum, 'streaming client joined (now '+(++clientOnlineCnt)+' clients online)');
 	if(tuneOffTimeout) {
@@ -41,6 +42,10 @@ function streamReq(req, res) {
 					console.log(clientNum, 'network too slow, pausing stream until queue is empty again');
 					disconnected = true;
 					stream.removeListener('data', pipeFn);
+
+					cutoffTimeout = setTimeout(function() {
+						
+					}, cutoffSeconds*1000)
 				}, deadManSeconds*1000);
 			}
 			full = true;
