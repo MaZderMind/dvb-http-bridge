@@ -120,13 +120,13 @@ loadChannelsList(function(channels) {
 					{
 						activeZap.on('close', function() {
 							activeZap = spawn(cmd, args);
-							connection.write_and_log("zap closed, restarting with new channel "+args);
+							connection.write_and_log("zap closed, restarting with new channel "+arg);
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write_and_log("starting zap with new channel "+args);
+						connection.write_and_log("starting zap with new channel "+arg);
 						activeZap = spawn(cmd, args);
 					}
 					break;
