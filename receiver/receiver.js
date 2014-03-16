@@ -101,7 +101,7 @@ loadChannelsList(function(channels) {
 
 			var
 				cmd = 'szap',
-				args = ['-r', '-H', '-c', channelFile, channel.match(/^[0-9]*$/) ? '-n' : '', channel];
+				args = ['-c', channelFile, channel.match(/^[0-9]*$/) ? '-rHn' : '-rH', channel];
 
 			if(activeZap)
 			{
