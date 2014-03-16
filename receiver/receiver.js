@@ -62,8 +62,10 @@ loadChannelsList(function(channels) {
 		// handle / requests
 		if(purl.pathname == '/')
 		{
-			return response.endPlaintext("/channels -> returns a list of available channel names\n"+
-				"/zap/<channel> -> tunes into the specified channel and returns its stream-data. <channel> can either be a channel name or its line-number");
+			return response.endPlaintext(
+				"/channels -> returns a list of available channel names\n"+
+				"/zap/<channel> -> tunes into the specified channel and returns its stream-data. <channel> can either be a channel name or its line-number"
+			);
 		}
 
 		// handle /channels requests
