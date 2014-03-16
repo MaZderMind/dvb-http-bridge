@@ -1,9 +1,9 @@
 {
-  "name": "DVB-HTTP-Bridge - Fluxbox-Streamer",
+  "name": "DVB-HTTP-Bridge-Receiver",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node fluxbox"
+    "start": "node receiver"
   },
   "dependencies": {
     "iconv-lite": "*"

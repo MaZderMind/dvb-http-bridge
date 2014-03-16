@@ -1,5 +1,6 @@
 var
-	net = require('net'),
+	http = require('http'),
+	url = require('url'),
 	spawn = require('child_process').spawn,
 	fs = require('fs'),
 	iconv = require('iconv-lite');
@@ -9,11 +10,15 @@ var
 	dvrDevice = '/dev/dvb/adapter0/dvr0',
 	channelFile = 'data/channels.conf';
 
+http.ServerResponse.prototype.endPlaintextAndLog = function(code, msg) {
+	console[msg == 200 ? 'info' : 'warn'](msg);
+	this.writeHead(code, {'Content-Length': Buffer.byteLength(msg, 'utf8'), 'Content-Type': 'text/plain; charset=utf-8' });
+	this.end(msg, 'utf-8');
+}
 
-net.Socket.prototype.write_and_log = function(data)
-{
-	console.info(data);
-	this.write(data+"\n");
+http.ServerResponse.prototype.endPlaintext = function(msg) {
+	this.writeHead(200, {'Content-Length': Buffer.byteLength(msg, 'utf8'), 'Content-Type': 'text/plain; charset=utf-8' });
+	this.end(msg, 'utf-8');
 }
 
 console.log('loading channels list');
@@ -36,106 +41,87 @@ loadChannelsList(function(channels) {
 
 	stream.on('data', function(chunk) {
 		if(activeConnection)
-			activeConnection.write(chunk);
+			activeConnection.response.write(chunk);
 	})
 
 	stream.resume();
 
 
 
-	console.log('opening tcp socket on port 5885')
-	var socket = net.createServer(function(connection) {
-		console.log('connection from '+connection.remoteAddress+':'+connection.remotePort)
-		connection.setEncoding('utf8');
+	console.log('opening http server on port 5885')
+	var socket = http.createServer(function(request, response) {
+		var
+			remoteAddress = request.socket.remoteAddress,
+			remotePort = request.socket.remotePort,
+			purl = url.parse(request.url);
 
-		// only accept a single connection
-		if(activeConnection)
+		console.log('request for '+purl.pathname+' from '+remoteAddress+':'+remotePort)
+
+		// handle / requests
+		if(purl.pathname == '/')
 		{
-			console.log('rejecting connection from '+connection.remoteAddress+':'+connection.remotePort+' because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
-			connection.end('rejectiong connection because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
-			return;
+			return response.endPlaintext("/channels -> returns a list of available channel names\n"+
+				"/zap/<channel> -> tunes into the specified channel and returns its stream-data. <channel> can either be a channel name or its line-number");
 		}
 
-		var
-			remoteAddress = connection.remoteAddress,
-			remotePort = connection.remotePort;
-		activeConnection = connection;
-		connection.on('close', function() {
-			console.log(remoteAddress+':'+remotePort+' closed the connection');
-			activeConnection = null;
+		// handle /channels requests
+		if(purl.pathname == '/channels')
+		{
+			return response.endPlaintext(channels.join("\n")+"\n");
+		}
+
+		// handle /zap/ZDF-like requests
+		var match = purl.pathname.match(/^\/zap\/(.+)/);
+		if(match)
+		{
+			var channel = match[1];
+
+			if(activeConnection)
+				return response.endPlaintextAndLog(400, 'another session is currently active by '+activeConnection.request.socket.remoteAddress+':'+activeConnection.request.socket.remotePort);
+
+			console.log('tuning into '+channel+' and sending stream to '+remoteAddress+':'+remotePort);
+
+			response.writeHead(200, {'Content-Type': 'video/M2TS' });
+			activeConnection = {'request': request, 'response': response};
+
+			request.on('close', function() {
+				console.log(remoteAddress+':'+remotePort+' closed the connection');
+				activeConnection = null;
+
+				if(activeZap)
+				{
+					console.log("going to idle");
+					activeZap.on('close', function() {
+						activeZap = null;
+						console.log("now idle");
+					})
+					activeZap.kill();
+				}
+			});
+
+			var
+				cmd = 'szap',
+				args = ['-r', '-H', '-c', channelFile, channel.match(/^[0-9]*$/) ? '-n' : '', channel];
 
 			if(activeZap)
 			{
-				console.log("going to idle");
 				activeZap.on('close', function() {
-					activeZap = null;
-					console.log("now idle");
+					console.log("zap closed, restarting with new channel "+channel);
+					activeZap = spawn(cmd, args);
 				})
 				activeZap.kill();
 			}
-		});
-		connection.on('data', function(data) {
-			var
-				parts = data.trim().split(' ', 2),
-				command = parts[0],
-				arg = parts[1];
-
-			if(command == '') return;
-
-			console.log('received command '+command);
-			switch(command)
+			else
 			{
-				case 'list':
-					connection.write(channels.join("\n")+"\n");
-					break;
-
-				case 'quit':
-					connection.write_and_log("closing connecion on request");
-					connection.end()
-					break;
-
-
-				case 'close':
-					if(activeZap)
-					{
-						connection.write_and_log("going to idle");
-						activeZap.on('close', function() {
-							activeZap = null;
-							connection.write_and_log("now idle");
-						})
-						activeZap.kill();
-					}
-					else
-					{
-						connection.write_and_log("staying idle");
-					}
-					break;
-
-				case 'zap':
-					var
-						cmd = 'szap',
-						args = ['-r', '-H', '-c', channelFile, arg];
-
-					if(activeZap)
-					{
-						activeZap.on('close', function() {
-							activeZap = spawn(cmd, args);
-							connection.write_and_log("zap closed, restarting with new channel "+arg);
-						})
-						activeZap.kill();
-					}
-					else
-					{
-						connection.write_and_log("starting zap with new channel "+arg);
-						activeZap = spawn(cmd, args);
-					}
-					break;
-
-				default:
-					console.warn('unknown command received: '+command);
-					break;
+				console.log("starting zap with new channel "+channel);
+				activeZap = spawn(cmd, args);
 			}
-		});
+
+			return;
+		}
+
+		// handle other calls
+		response.endPlaintextAndLog(400, "unhandled request")
 	});
 	socket.listen(5885);
 })
@@ -152,21 +138,6 @@ function loadChannelsList(cb){
 
 			line = line.split(':');
 			channels.push(line[0]);
-		});
-
-		var validRe = /^[a-z0-9]/i;
-		channels = channels.filter(function(n) {
-			return validRe.test(n);
-		});
-
-		channels.sort(function(a, b) {
-			var
-				an = a.toLowerCase();
-				bn = b.toLowerCase();
-			
-			if(an < bn) return -1;
-			else if(an > bn) return 1;
-			else return 0;
 		});
 
 		cb(channels);
