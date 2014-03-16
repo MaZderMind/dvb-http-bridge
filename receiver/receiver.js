@@ -7,7 +7,7 @@ var
 
 var
 	dvrDevice = '/dev/dvb/adapter0/dvr0',
-	channelFile = '../data/channels.conf';
+	channelFile = 'data/channels.conf';
 
 
 net.Socket.prototype.write_and_log = function(data)
