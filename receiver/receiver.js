@@ -11,12 +11,15 @@ var
 	channelFile = 'data/channels.conf';
 
 http.ServerResponse.prototype.endPlaintextAndLog = function(code, msg) {
-	console[msg == 200 ? 'info' : 'warn'](msg);
+	console[code == 200 ? 'info' : 'warn'](msg);
+
+	msg += "\n"
 	this.writeHead(code, {'Content-Length': Buffer.byteLength(msg, 'utf8'), 'Content-Type': 'text/plain; charset=utf-8' });
 	this.end(msg, 'utf-8');
 }
 
 http.ServerResponse.prototype.endPlaintext = function(msg) {
+	msg += "\n";
 	this.writeHead(200, {'Content-Length': Buffer.byteLength(msg, 'utf8'), 'Content-Type': 'text/plain; charset=utf-8' });
 	this.end(msg, 'utf-8');
 }
