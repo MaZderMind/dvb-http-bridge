@@ -36,48 +36,51 @@ loadChannelsList(function(channels) {
 
 
 	console.log('opening tcp socket on port 5885')
-	var socket = dgram.createServer(function(connection) {
+	var socket = net.createServer(function(connection) {
 		console.log('connection from '+connection.remoteAddress+':'+connection.remotePort)
 		connection.setEncoding('utf8');
 
 		// only accept a single connection
-		if(currentConnection)
+		if(activeConnection)
 		{
-			console.log('rejectiong connection from '+connection.remoteAddress+':'+connection.remotePort+' because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
+			console.log('rejecting connection from '+connection.remoteAddress+':'+connection.remotePort+' because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
 			connection.end('rejectiong connection because of existing connection from '+activeConnection.remoteAddress+':'+activeConnection.remotePort);
 			return;
 		}
 
-		currentConnection = connection;
+		activeConnection = connection;
 		connection.on('end', function() {
 			connection.end(connection.remoteAddress+':'+connection.remotePort+' closed the connection');
-			currentConnection = null;
+			activeConnection = null;
 		});
 		connection.on('data', function(data) {
 			var
-				parts = data.split(' ', 2),
+				parts = data.trim().split(' ', 2),
 				command = parts[0],
 				arg = parts[1];
 
+			if(command == '') return;
+
+			console.log('received command '+command);
 			switch(command)
 			{
 				case 'list':
-					connection.write(channels.join("\n"));
+					connection.write(channels.join("\n")+"\n");
 					break;
 
 				case 'close':
 					if(activeZap)
 					{
-						connection.write("going to idle");
+						connection.write("going to idle\n");
 						activeZap.on('close', function() {
 							activeZap = null;
-							connection.write("now idle");
+							connection.write("now idle\n");
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write("staying idle");
+						connection.write("staying idle\n");
 					}
 					break;
 
@@ -87,15 +90,19 @@ loadChannelsList(function(channels) {
 					{
 						activeZap.on('close', function() {
 							activeZap = spawn(cmd);
-							connection.write("zap closed, restarting with new channel");
+							connection.write("zap closed, restarting with new channel\n");
 						})
 						activeZap.kill();
 					}
 					else
 					{
-						connection.write("starting zap with new channel");
+						connection.write("starting zap with new channel\n");
 						activeZap = spawn(cmd);
 					}
+					break;
+
+				default:
+					console.warn('unknown command received: '+command);
 					break;
 			}
 		});
@@ -122,7 +129,6 @@ function loadChannelsList(cb){
 			return validRe.test(n);
 		});
 
-		channels = channels.slice(0, 20);
 		channels.sort(function(a, b) {
 			var
 				an = a.toLowerCase();
