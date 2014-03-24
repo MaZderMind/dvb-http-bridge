@@ -81,6 +81,14 @@ loadChannelsList(function(channels) {
 		{
 			var channel = match[1];
 
+			// if channel is not a number, look its index up in the channel-list
+			if(!channel.match(/^[0-9]*$/))
+				channel = channels.indexOf(unescape(channel));
+
+			// check that this is a valid channel index
+			if(channel < 0 || channel >= channels.length)
+				return response.endPlaintextAndLog(400, 'channel '+match[1]+' is no valid channel name/number');
+
 			if(activeConnection)
 				return response.endPlaintextAndLog(400, 'another session is currently active by '+activeConnection.request.socket.remoteAddress+':'+activeConnection.request.socket.remotePort);
 
@@ -106,7 +114,7 @@ loadChannelsList(function(channels) {
 
 			var
 				cmd = 'szap',
-				args = ['-c', channelFile, channel.match(/^[0-9]*$/) ? '-rHn' : '-rH', channel];
+				args = ['-c', channelFile, '-rHn', channel];
 
 			if(activeZap)
 			{
