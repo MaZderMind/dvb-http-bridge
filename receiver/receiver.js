@@ -83,7 +83,7 @@ loadChannelsList(function(channels) {
 
 			// if channel is not a number, look its index up in the channel-list
 			if(!channel.match(/^[0-9]*$/))
-				channel = channels.indexOf(unescape(channel));
+				channel = channels.indexOf(unescape(channel))+1;
 
 			// check that this is a valid channel index
 			if(channel < 0 || channel >= channels.length)
