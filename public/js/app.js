@@ -4,11 +4,15 @@ $(function() {
 		$loading = $('.loading'),
 		$channels = $('.channels'),
 		$channelTpl = $channels.find('.template').remove().removeClass('template'),
-		playerprefix = 'goodplayer://',
 		baseurl = location.protocol+'//'+location.host;
 
 	function buildUrl(channel)
 	{
+		var playerprefix = '';
+
+		if(navigator.userAgent.match(/(iPod|iPhone|iPad)/))
+			playerprefix = 'goodplayer://';
+
 		return playerprefix+baseurl+'/zap/'+escape(channel);
 	}
 
@@ -31,11 +35,12 @@ $(function() {
 	function updateStatus()
 	{
 		$.get('/status', function(status) {
-			if(status[0] == ':')
-			{
-				// running
-				$active.show().find('channel').text(status.substr(1));
-			}
+			var isactive = (status[0] == ':');
+			if(isactive)
+				$active.find('.name').text(status.substr(1));
+
+			$active.css('display',  !isactive ? 'none' : 'block')
+			$channels.css('display', isactive ? 'none' : 'block')
 		});
 	}
 
