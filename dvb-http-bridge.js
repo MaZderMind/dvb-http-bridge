@@ -135,7 +135,7 @@ loadChannelsList(function(channels) {
 
 			killProcesses(function() {
 				console.log("remux & zap closed, restarting with new channel "+channel);
-				active = null;
+				active = {};
 				active.remux = spawn('avconv', ['-probesize', 400000, '-fpsprobesize', 400000, '-analyzeduration', 5000000, '-i', dvrDevice, '-c', 'copy', '-f', 'mpegts', '-'], {stdio: ['ignore', 'pipe', process.stderr]});
 				active.zap = spawn('szap', ['-c', channelFile, '-rHn', channel], {stdio: 'ignore'});
 
