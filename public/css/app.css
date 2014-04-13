@@ -1,8 +1,23 @@
+body {
+	font-family: sans-serif;
+}
+
 .active,
 .channels { display: none; }
 
+.active,
+.loading {
+	text-align: center;
+}
+
+.active {
+	background-color: red;
+	color: white;
+	padding: 10px;
+}
+
 .channel {
-	width: 145px;
+	width: 132px;
 	height: 180px;
 
 	text-align: center;
@@ -10,7 +25,7 @@
 	background-color: #808080;
 
 	float: left;
-	margin: 10px;
+	margin: 9px;
 }
 
 .channel a {

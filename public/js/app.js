@@ -37,7 +37,9 @@ $(function() {
 		$.get('/status', function(status) {
 			var isactive = (status[0] == ':');
 			if(isactive)
-				$active.find('.name').text(status.substr(1));
+				$active.find('.name').text(
+					status.substr(1).replace(/(\r\n|\n|\r)/gm, '')
+				);
 
 			$active.css('display',  !isactive ? 'none' : 'block')
 			$channels.css('display', isactive ? 'none' : 'block')
@@ -45,5 +47,5 @@ $(function() {
 	}
 
 	updateStatus();
-	setInterval(updateStatus, 1000*5);
+	setInterval(updateStatus, 1000*2);
 });
