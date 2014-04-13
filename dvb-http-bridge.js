@@ -86,6 +86,15 @@ loadChannelsList(function(channels) {
 			return response.endPlaintext(channels.join("\n"));
 		}
 
+		// handle /channels requests
+		if(purl.pathname == '/status')
+		{
+			if(active)
+				return response.endPlaintext(':'+active.channel);
+
+			return response.endPlaintext('#IDLE');
+		}
+
 		// handle /zap/ZDF-like requests
 		var match = purl.pathname.match(/^\/zap\/(.+)/);
 		if(match)
