@@ -29,13 +29,12 @@ console.log('loading channels list');
 loadChannelsList(function(channels) {
 	console.log('loaded', channels.length, 'channels')
 
-	var activeConnection = null;
-	var activeZap = null, activeRemux = null;
+	var active = null;
 
 	function killProcesses(killedCb) {
 		async.series([
 			function(cb) {
-				if(!activeRemux)
+				if(!active)
 					return cb();
 
 				console.log("closing remux");
@@ -44,22 +43,23 @@ loadChannelsList(function(channels) {
 				//	activeRemux = null;
 				//	cb();
 				//})
-				activeRemux.kill('SIGKILL');
+				active.remux.kill('SIGKILL');
+				active.remux = null;
 				cb();
 			},
 			function(cb) {
-				if(!activeZap)
+				if(!active)
 					return cb();
 
 				console.log("closing zap");
-				activeZap.on('close', function() {
+				active.zap.on('close', function() {
 					console.log("zap closed");
-					activeZap = null;
+					active.zap = null;
 					cb();
 				})
-				activeZap.kill();
+				active.zap.kill();
 			}
-		], killedCb);
+		], killedCb());
 	}
 
 	console.log('opening http server on port 5885')
@@ -100,31 +100,36 @@ loadChannelsList(function(channels) {
 			if(channel <= 0 || channel >= channels.length)
 				return response.endPlaintextAndLog(400, 'channel '+match[1]+' is no valid channel name/number');
 
-			if(activeConnection)
-				return response.endPlaintextAndLog(400, 'another session is currently active by '+activeConnection.request.socket.remoteAddress+':'+activeConnection.request.socket.remotePort);
+			if(active)
+				return response.endPlaintextAndLog(400, 'another session is currently active by '+active.connection.request.socket.remoteAddress+':'+active.connection.request.socket.remotePort);
 
+			active = {}
+
+			active.channel = channel;
 			console.log('tuning into '+channel+' and sending stream to '+remoteAddress+':'+remotePort);
 
 			response.writeHead(200, {'Content-Type': 'video/M2TS' });
-			activeConnection = {'request': request, 'response': response};
+			active.connection = {'request': request, 'response': response};
 
 			request.on('close', function() {
 				console.log(remoteAddress+':'+remotePort+' closed the connection');
-				activeConnection = null;
+				active.connection = null;
 
 				console.log("going to idle");
 				killProcesses(function() {
 					console.log("remux & zap closed, now idle");
+					active = null;
 				});
 			});
 
 			killProcesses(function() {
 				console.log("remux & zap closed, restarting with new channel "+channel);
-				activeRemux = spawn('avconv', ['-probesize', 400000, '-fpsprobesize', 400000, '-analyzeduration', 5000000, '-i', dvrDevice, '-c', 'copy', '-f', 'mpegts', '-'], {stdio: ['ignore', 'pipe', process.stderr]});
-				activeZap = spawn('szap', ['-c', channelFile, '-rHn', channel], {stdio: 'ignore'});
+				active = null;
+				active.remux = spawn('avconv', ['-probesize', 400000, '-fpsprobesize', 400000, '-analyzeduration', 5000000, '-i', dvrDevice, '-c', 'copy', '-f', 'mpegts', '-'], {stdio: ['ignore', 'pipe', process.stderr]});
+				active.zap = spawn('szap', ['-c', channelFile, '-rHn', channel], {stdio: 'ignore'});
 
-				activeRemux.stdout.on('data', function(chunk) {
-					if(activeConnection) activeConnection.response.write(chunk);
+				active.remux.stdout.on('data', function(chunk) {
+					if(active && active.connection) active.connection.response.write(chunk);
 				});
 			});
 
@@ -132,7 +137,7 @@ loadChannelsList(function(channels) {
 		}
 
 		// handle other calls
-		response.endPlaintextAndLog(400, "unhandled request")
+		response.endPlaintextAndLog(400, "unhandled request ("+purl.pathname+')')
 	});
 	socket.listen(5885);
 })
