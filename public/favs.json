@@ -1,0 +1,162 @@
+[
+	{
+		"index": 698,
+		"name": "Das Erste",
+		"icon": "ard_das_erste.png"
+	},
+	{
+		"index": 616,
+		"name": "ZDF",
+		"icon": "zdf_de.png"
+	},
+	{
+		"index": 426,
+		"name": "SAT-1",
+		"icon": "sat1.png"
+	},
+	{
+		"index": 628,
+		"name": "RTL",
+		"icon": "rtl_de.png"
+	},
+	{
+		"index": 631,
+		"name": "VOX",
+		"icon": "vox_de.png"
+	},
+	{
+		"index": 427,
+		"name": "ProSieben",
+		"icon": "pro_sieben_de.png"
+	},
+	{
+		"index": 428,
+		"name": "kabel eins",
+		"icon": "kabel_eins.png"
+	},
+	{
+		"index": 629,
+		"name": "RTL2",
+		"icon": "rtl2_de.png"
+	},
+	{
+		"index": 403,
+		"name": "SIXX",
+		"icon": "sixx.png"
+	},
+	{
+		"index": 635,
+		"name": "RTL.NITRO",
+		"icon": "rtl_nitro_de.png"
+	},
+	{
+		"index": 404,
+		"name": "Disney Channel",
+		"icon": "disney_channel_de.png"
+	},
+	{
+		"index": 630,
+		"name": "Super RTL",
+		"icon": "super_rtl_de.png"
+	},
+	{
+		"index": 417,
+		"name": "TELE5",
+		"icon": "tele5_de.png"
+	},
+	{
+		"index": 401,
+		"name": "Anixe",
+		"icon": "anixe_hd.png"
+	},
+	{
+		"index": 283,
+		"name": "ARTE",
+		"icon": "arte_de.png"
+	},
+	{
+		"index": 699,
+		"name": "BR Fernsehen",
+		"icon": "br_sud.png"
+	},
+	{
+		"index": 274,
+		"name": "SWR Fernsehen",
+		"icon": "swr_fernsehen_rp.png"
+	},
+	{
+		"index": 700,
+		"name": "HR",
+		"icon": "hr_fernsehen_de.png"
+	},
+	{
+		"index": 632,
+		"name": "N-TV",
+		"icon": "ntv_de.png"
+	},
+	{
+		"index": 429,
+		"name": "N24",
+		"icon": "n24_de.png"
+	},
+	{
+		"index": 617,
+		"name": "3sat",
+		"icon": "3sat.png"
+	},
+	{
+		"index": 269,
+		"name": "NDR",
+		"icon": "ndr_fernsehen.png"
+	},
+	{
+		"index": 271,
+		"name": "MDR",
+		"icon": "mdr_fernsehen_de.png"
+	},
+	{
+		"index": 702,
+		"name": "WDR",
+		"icon": "wdr_studio_wuppertal.png"
+	},
+	{
+		"index": 284,
+		"name": "Phoenix",
+		"icon": "phoenix_de.png"
+	},
+	{
+		"index": 265,
+		"name": "rbb Berlin",
+		"icon": "rbb_berlin.png"
+	},
+	{
+		"index": 280,
+		"name": "tagesschau24",
+		"icon": "tagesschau24.png"
+	},
+	{
+		"index": 281,
+		"name": "EinsFestival",
+		"icon": "ard_eins_festival.png"
+	},
+	{
+		"index": 282,
+		"name": "EinsPlus",
+		"icon": "ard_eins_plus.png"
+	},
+	{
+		"index": 619,
+		"name": "ZDFinfo",
+		"icon": "zdf_info.png"
+	},
+	{
+		"index": 623,
+		"name": "zdf.kultur",
+		"icon": "zdf_kultur.png"
+	},
+	{
+		"index": 622,
+		"name": "zdf_neo",
+		"icon": "zdf_neo.png"
+	}
+]

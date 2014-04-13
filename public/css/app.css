@@ -1,0 +1,28 @@
+.active,
+.channels { display: none; }
+
+.channel {
+	width: 145px;
+	height: 180px;
+
+	text-align: center;
+	border: 1px solid black;
+	background-color: #808080;
+
+	float: left;
+	margin: 10px;
+}
+
+.channel a {
+	text-decoration: none;
+}
+
+.channel a img {
+	border-width: 0;
+}
+
+.channel h2 {
+	font-weight: normal;
+	font-size: 20px;
+	color: white;
+}

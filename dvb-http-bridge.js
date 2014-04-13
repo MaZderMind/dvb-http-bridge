@@ -4,12 +4,13 @@ var
 	spawn = require('child_process').spawn,
 	fs = require('fs'),
 	iconv = require('iconv-lite'),
-	async = require('async');
-
-
-var
+	async = require('async'),
+	nodestatic = require('node-static'),
+	fileserver = new nodestatic.Server('./public'),
 	dvrDevice = '/dev/dvb/adapter0/dvr0',
 	channelFile = 'data/channels.conf';
+
+
 
 http.ServerResponse.prototype.endPlaintextAndLog = function(code, msg) {
 	console[msg == 200 ? 'info' : 'warn'](msg);
@@ -72,10 +73,11 @@ loadChannelsList(function(channels) {
 		console.log('request for '+purl.pathname+' from '+remoteAddress+':'+remotePort)
 
 		// handle / requests
-		if(purl.pathname == '/')
+		if(purl.pathname == '/help')
 		{
 			return response.endPlaintext(
 				"/channels -> returns a list of available channel names\n"+
+				"/status -> returns current system status. # indicates idle, : indicates tuned-in into channel\n"+
 				"/zap/<channel> -> tunes into the specified channel and returns its stream-data. <channel> can either be a channel name or its line-number"
 			);
 		}
@@ -146,8 +148,11 @@ loadChannelsList(function(channels) {
 		}
 
 		// handle other calls
-		response.endPlaintextAndLog(400, "unhandled request ("+purl.pathname+')')
+		request.addListener('end', function () {
+			fileserver.serve(request, response);
+		}).resume();
 	});
+
 	socket.listen(5885);
 })
 
