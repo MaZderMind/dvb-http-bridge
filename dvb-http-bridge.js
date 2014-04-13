@@ -35,7 +35,7 @@ loadChannelsList(function(channels) {
 	function killProcesses(killedCb) {
 		async.series([
 			function(cb) {
-				if(!active)
+				if(!active || !active.remux)
 					return cb();
 
 				console.log("closing remux");
@@ -49,7 +49,7 @@ loadChannelsList(function(channels) {
 				cb();
 			},
 			function(cb) {
-				if(!active)
+				if(!active || !active.zap)
 					return cb();
 
 				console.log("closing zap");
@@ -60,7 +60,7 @@ loadChannelsList(function(channels) {
 				})
 				active.zap.kill();
 			}
-		], killedCb());
+		], killedCb);
 	}
 
 	console.log('opening http server on port 5885')
@@ -116,7 +116,8 @@ loadChannelsList(function(channels) {
 
 			active = {}
 
-			active.channel = channel;
+			active.channelidx = channel;
+			active.channel = channels[channel-1];
 			console.log('tuning into '+channel+' and sending stream to '+remoteAddress+':'+remotePort);
 
 			response.writeHead(200, {'Content-Type': 'video/M2TS' });
@@ -135,7 +136,6 @@ loadChannelsList(function(channels) {
 
 			killProcesses(function() {
 				console.log("remux & zap closed, restarting with new channel "+channel);
-				active = {};
 				active.remux = spawn('avconv', ['-probesize', 400000, '-fpsprobesize', 400000, '-analyzeduration', 5000000, '-i', dvrDevice, '-c', 'copy', '-f', 'mpegts', '-'], {stdio: ['ignore', 'pipe', process.stderr]});
 				active.zap = spawn('szap', ['-c', channelFile, '-rHn', channel], {stdio: 'ignore'});
 
