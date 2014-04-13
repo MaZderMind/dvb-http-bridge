@@ -3,6 +3,8 @@ var
 	url = require('url'),
 	fs = require('fs'),
 	path = require('path'),
+	staticfile = require('node-static')
+	file = new staticfile.Server('./stream'),
 	spawn = require('child_process').spawn;
 
 var
@@ -45,7 +47,7 @@ var socket = http.createServer(function(request, response) {
 			"/channels -> returns a list of available channel names\n"+
 			"/zap/<channel> -> tunes into the specified channel. <channel> can either be a channel name or its line-number. with this call the validity of the stream-url ends. the call returns, as soon as the stream-url is valid again\n"+
 			"/zapoff -> turns the tuner off\n"+
-			"/stream/stream.m3u8 -> a h264/mp3 hls stream for your iPhone/iPad"
+			"/stream.m3u8 -> a h264/mp3 hls stream for your iPhone/iPad"
 		);
 	}
 
@@ -156,6 +158,10 @@ var socket = http.createServer(function(request, response) {
 			return;
 		});
 	}
+
+	request.addListener('end', function () {
+		file.serve(request, response);
+	}).resume();
 
 
 	// handle other calls
