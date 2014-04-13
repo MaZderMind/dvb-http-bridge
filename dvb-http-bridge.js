@@ -3,7 +3,8 @@ var
 	url = require('url'),
 	spawn = require('child_process').spawn,
 	fs = require('fs'),
-	iconv = require('iconv-lite');
+	iconv = require('iconv-lite'),
+	async = require('async');
 
 
 var
@@ -29,27 +30,37 @@ loadChannelsList(function(channels) {
 	console.log('loaded', channels.length, 'channels')
 
 	var activeConnection = null;
-	var activeZap = null;
+	var activeZap = null, activeRemux = null;
 
-	console.log('opening dvb stream');
-	var stream = fs.createReadStream(dvrDevice);
+	function killProcesses(killedCb) {
+		async.series([
+			function(cb) {
+				if(!activeRemux)
+					return cb();
 
-	stream.on('end', function() {
-		console.log('dvb stream ended, TODO: Retry?');
-	})
+				console.log("closing remux");
+				//activeRemux.on('close', function() {
+				//	console.log("remux closed");
+				//	activeRemux = null;
+				//	cb();
+				//})
+				activeRemux.kill('SIGKILL');
+				cb();
+			},
+			function(cb) {
+				if(!activeZap)
+					return cb();
 
-	stream.on('error', function(err) {
-		console.error('dvb stream ended with error, TODO: Retry?', err);
-	})
-
-	stream.on('data', function(chunk) {
-		if(activeConnection)
-			activeConnection.response.write(chunk);
-	})
-
-	stream.resume();
-
-
+				console.log("closing zap");
+				activeZap.on('close', function() {
+					console.log("zap closed");
+					activeZap = null;
+					cb();
+				})
+				activeZap.kill();
+			}
+		], killedCb);
+	}
 
 	console.log('opening http server on port 5885')
 	var socket = http.createServer(function(request, response) {
@@ -81,6 +92,14 @@ loadChannelsList(function(channels) {
 		{
 			var channel = match[1];
 
+			// if channel is not a number, look its index up in the channel-list
+			if(!channel.match(/^[0-9]*$/))
+				channel = channels.indexOf(unescape(channel))+1;
+
+			// check that this is a valid channel index
+			if(channel <= 0 || channel >= channels.length)
+				return response.endPlaintextAndLog(400, 'channel '+match[1]+' is no valid channel name/number');
+
 			if(activeConnection)
 				return response.endPlaintextAndLog(400, 'another session is currently active by '+activeConnection.request.socket.remoteAddress+':'+activeConnection.request.socket.remotePort);
 
@@ -93,34 +112,21 @@ loadChannelsList(function(channels) {
 				console.log(remoteAddress+':'+remotePort+' closed the connection');
 				activeConnection = null;
 
-				if(activeZap)
-				{
-					console.log("going to idle");
-					activeZap.on('close', function() {
-						activeZap = null;
-						console.log("now idle");
-					})
-					activeZap.kill();
-				}
+				console.log("going to idle");
+				killProcesses(function() {
+					console.log("remux & zap closed, now idle");
+				});
 			});
 
-			var
-				cmd = 'szap',
-				args = ['-c', channelFile, channel.match(/^[0-9]*$/) ? '-rHn' : '-rH', channel];
+			killProcesses(function() {
+				console.log("remux & zap closed, restarting with new channel "+channel);
+				activeRemux = spawn('avconv', ['-probesize', 400000, '-fpsprobesize', 400000, '-analyzeduration', 5000000, '-i', dvrDevice, '-c', 'copy', '-f', 'mpegts', '-'], {stdio: ['ignore', 'pipe', process.stderr]});
+				activeZap = spawn('szap', ['-c', channelFile, '-rHn', channel], {stdio: 'ignore'});
 
-			if(activeZap)
-			{
-				activeZap.on('close', function() {
-					console.log("zap closed, restarting with new channel "+channel);
-					activeZap = spawn(cmd, args, {stdio: 'inherit'});
-				})
-				activeZap.kill();
-			}
-			else
-			{
-				console.log("starting zap with new channel "+channel);
-				activeZap = spawn(cmd, args, {stdio: 'inherit'});
-			}
+				activeRemux.stdout.on('data', function(chunk) {
+					if(activeConnection) activeConnection.response.write(chunk);
+				});
+			});
 
 			return;
 		}

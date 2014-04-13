@@ -6,6 +6,7 @@
     "start": "node receiver"
   },
   "dependencies": {
-    "iconv-lite": "*"
+    "iconv-lite": "*",
+    "async": "*"
   }
 }
