@@ -8,7 +8,8 @@ var
 	nodestatic = require('node-static'),
 	fileserver = new nodestatic.Server('./public'),
 	dvrDevice = '/dev/dvb/adapter0/dvr0',
-	channelFile = 'data/channels.conf';
+	channelFile = 'data/channels.conf',
+	traffic = 0;
 
 
 
@@ -97,6 +98,12 @@ loadChannelsList(function(channels) {
 			return response.endPlaintext('#IDLE');
 		}
 
+		// handle /channels requests
+		if(purl.pathname == '/traffic')
+		{
+			return response.endPlaintext(Math.round(traffic/1024)+' MiB');
+		}
+
 		// handle /zap/ZDF-like requests
 		var match = purl.pathname.match(/^\/zap\/(.+)/);
 		if(match)
@@ -140,7 +147,9 @@ loadChannelsList(function(channels) {
 				active.zap = spawn('szap', ['-c', channelFile, '-rHn', channel], {stdio: 'ignore'});
 
 				active.remux.stdout.on('data', function(chunk) {
-					if(active && active.connection) active.connection.response.write(chunk);
+					traffic += Math.round(chunk.length / 1024);
+					if(active && active.connection)
+						active.connection.response.write(chunk);
 				});
 			});
 
