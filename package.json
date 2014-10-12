@@ -8,7 +8,11 @@
   "dependencies": {
     "iconv-lite": "*",
     "async": "*",
-    "node-static": "*",
-    "rrule": "*"
+    "rrule": "*",
+
+    "express": "*",
+    "morgan": "*",
+    "serve-index": "*",
+    "serve-static": "*"
   }
 }
