@@ -6,15 +6,20 @@ $(function() {
 		$channelTpl = $channels.find('.template').remove().removeClass('template'),
 		baseurl = location.protocol+'//'+location.host;
 
+	function playerprefix()
+	{
+		if(navigator.userAgent.match(/(iPod|iPhone|iPad)/))
+			return 'goodplayer://';
+
+		return '';
+	}
+
 	function buildUrl(channel)
 	{
-		var playerprefix = '';
-
-		if(navigator.userAgent.match(/(iPod|iPhone|iPad)/))
-			playerprefix = 'goodplayer://';
-
-		return playerprefix+baseurl+'/zap/'+escape(channel);
+		return playerprefix()+baseurl+'/zap/'+escape(channel);
 	}
+
+	$('.active .join').attr('href', playerprefix()+baseurl+'/co-watch');
 
 	$.get('/favs.json', function(favs) {
 		$.each(favs, function(i, fav) {
