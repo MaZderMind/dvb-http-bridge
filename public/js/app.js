@@ -34,15 +34,16 @@ $(function() {
 
 	function updateStatus()
 	{
-		$.get('/status', function(status) {
-			var isactive = (status[0] == ':');
-			if(isactive)
-				$active.find('.name').text(
-					status.substr(1).replace(/(\r\n|\n|\r)/gm, '')
-				);
+		$.ajax({
+			url: '/state',
+			dataType: 'json',
+			success: function(state) {
+				if(state.active)
+					$active.find('.name').text(state.channelname);
 
-			$active.css('display',  !isactive ? 'none' : 'block')
-			$channels.css('display', isactive ? 'none' : 'block')
+				$active.css('display',  !state.active ? 'none' : 'block')
+				$channels.css('display', state.active ? 'none' : 'block')
+			}
 		});
 	}
 
