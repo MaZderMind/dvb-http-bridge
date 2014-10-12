@@ -39,4 +39,4 @@ app.use(
 	serveStatic('./public')
 )
 
-app.listen(5885)
+app.listen(config.port)

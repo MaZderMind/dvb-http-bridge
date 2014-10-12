@@ -1,4 +1,9 @@
-exports.dvrDevice = '/dev/dvb/adapter0/dvr0';
-exports.channelFile = 'data/channels.conf';
-exports.recordingsFile = 'data/recordings.json';
-exports.recordingsDir = '/video/';
+module.exports = {
+	port: 5885,
+
+	dvrDevice: '/dev/dvb/adapter0/dvr0',
+	channelFile: 'data/channels.conf',
+
+	recordingsFile: 'data/recordings.json',
+	recordingsDir: '/video/',
+}
