@@ -1,0 +1,14 @@
+[
+	{
+		"name": "White Collar Doppelfolge",
+		"channel": 631,
+		"dates": "FREQ=WEEKLY;DTSTART=20141011T203500Z",
+		"duration": 130
+	},
+	{
+		"name": "RTL-Test-Recording",
+		"channel": 628,
+		"date": "2014-10-12 19:25:40",
+		"duration": 1
+	}
+]

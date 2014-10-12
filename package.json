@@ -8,6 +8,7 @@
   "dependencies": {
     "iconv-lite": "*",
     "async": "*",
-    "node-static": "*"
+    "node-static": "*",
+    "rrule": "*"
   }
 }
