@@ -9,6 +9,7 @@
     "iconv-lite": "*",
     "async": "*",
     "rrule": "*",
+    "nodemailer": "*",
 
     "express": "*",
     "morgan": "*",
