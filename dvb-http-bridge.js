@@ -29,7 +29,10 @@ app.use('/channels', function(req, res, next) {
 
 app.use('/recordings', [
 	serveStatic(config.recordingsDir),
-	serveIndex(config.recordingsDir, {view: 'details'})
+	serveIndex(config.recordingsDir, {
+		view: 'details',
+		template: 'public/directory.html'
+	})
 ])
 
 app.use(zap.router)
