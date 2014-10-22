@@ -41,3 +41,19 @@ body {
 	font-size: 20px;
 	color: white;
 }
+
+.recordings a {
+	background: url(/images/recordings/apple-touch-icon.png) no-repeat #808080 center center;
+	clear: both;
+	height: 175px;
+	line-height: 175px;
+	width: 100%;
+	padding-left: 250px;
+	box-sizing: border-box;
+	font-size: 64px;
+
+	color: black;
+	text-decoration: none;
+
+	display: block;
+}
