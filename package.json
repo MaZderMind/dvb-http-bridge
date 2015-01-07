@@ -10,10 +10,10 @@
     "async": "*",
     "rrule": "*",
     "nodemailer": "*",
-
     "express": "*",
     "morgan": "*",
     "serve-index": "*",
-    "serve-static": "*"
+    "serve-static": "*",
+    "http-digest-client": "*"
   }
 }
