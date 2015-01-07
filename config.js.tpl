@@ -13,6 +13,7 @@ module.exports = {
 	// file get's watched by a file-watch, url will be polled twice a minute
 	recordingsFile: 'data/recordings.json',
 	//recordingsUrl: 'http://data/recordings.json',
+	//recordingsUrlAuth: ['admin', 'admin'],
 	//recordingsUrlInterval: 30*1000,
 
 	recordingsDir: '/video/',
