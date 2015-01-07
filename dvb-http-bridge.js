@@ -42,4 +42,4 @@ app.use(
 	serveStatic('./public')
 )
 
-app.listen(config.port)
+app.listen(config.port, '::')
