@@ -5,7 +5,7 @@ At home we have Satelite-TV (DVBS). The Base-Goal that lead to this Project was 
 I have a very lowlevel and old [VIA EPIA](http://de.wikipedia.org/wiki/EPIA) mainboard with a [PicoPSU](http://www.mini-box.com/s.nl/sc.8/category.13/.f) and a [P-ATA-Flash Module](http://de.transcend-info.com/Products/no-531). It was running for some Time as IPv6 Bridge here anyway and had a free PCI-Socket (yes, it's that old technology), so I added a [Technisat Skystar DVBS](http://www.amazon.de/Technisat-Skystar-DVBS-TV-Karte-Fernbedien-Set/dp/B0000E3IAF) card. I guess nowadays you would use a [BeagleBone Black](http://www.amazon.de/BeagleBone-Beagleboard-Black-Cortex-Speicher/dp/B00CO3MZCW) and a DVBS-USB adapter, although I can't find one at the moment. Anyway, as long as the DVBS-Adapter is recognized by your Linux-Kernel any device should work, because the application does not need any substantial amount of CPU powrer.
 
 # Process/Dataflow
-After copying [config.js.tpl](config.js.tpl) and starting [dvb-http-bridge.js](dvb-http-bridge.js) with node, the Application serves a list of Channel-Icons via HTTP, usually on port 5885. Which channels are diaplayed is configured by [public/favs.json](public/favs.json). Also there is a Script [public/images/channels/fetch.sh](public/images/channels/fetch.sh) which downloads the Channel-Logos from [www.lyngsat-logo.com](http://www.lyngsat-logo.com/).
+After copying [config.js.tpl](config.js.tpl) and starting [dvb-http-bridge.js](dvb-http-bridge.js) with node, the Application serves a list of Channel-Icons via HTTP, usually on port 5885. Which channels are displayed is configured by [public/favs.json](public/favs.json). Also there is a Script [public/images/channels/fetch.sh](public/images/channels/fetch.sh) which downloads the Channel-Logos from [www.lyngsat-logo.com](http://www.lyngsat-logo.com/).
 
 It also exposes some API-Calls like http://fluxbox:5885/channels.
 
@@ -21,7 +21,7 @@ To watch TV on a linux box you can simply call
 
     ffplay http://hostname:5885/zap/ProSieben
 
-or paste that URL into your VLC or whatever. Now special Control-Protocol required or involved.
+or paste that URL into your VLC or whatever. No special Control-Protocol required or involved.
 
 # On the mobile Device
 As $iDevices can't play MPEG2 or MP2 natively i used [GoodPlayer](https://itunes.apple.com/de/app/goodplayer/id416756729?mt=8) for iOS which does CPU-Decoding and can also Deinterlace the interlaced DVBS-Signal. It was testet to run smooth on an iPhone 4s, iPhone 5, iPhone 5s, iPad 3 and iPad Mini. There may be other Apps like [VLC for iOS](https://itunes.apple.com/us/app/vlc-videolan-media-player/id934665924?mt=8) that may work well for your, too.
