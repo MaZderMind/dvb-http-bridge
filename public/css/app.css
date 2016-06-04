@@ -43,7 +43,7 @@ body {
 }
 
 .recordings a {
-	background: url(/images/recordings/apple-touch-icon.png) no-repeat #808080 center center;
+	background: url(/images/recordings/icon.png) no-repeat #808080 center center;
 	clear: both;
 	height: 175px;
 	line-height: 175px;
