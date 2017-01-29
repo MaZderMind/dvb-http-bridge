@@ -4,7 +4,7 @@
 logos="\
  ss/sat1.png\
  pp/pro_sieben_de.png\
- kk/kabel_eins.png\
+ kk/kabel_eins_de.png\
  aa/ard_das_erste.png\
  zz/zdf_de.png\
  rr/rtl_de.png\
@@ -43,6 +43,6 @@ for logo in $logos; do
 
 	# download image
 	#wget -nv http://www.lyngsat-logo.com/hires/$logo -O $base
-	wget -nv --user-agent="Logo-Downloader for DVB-to-HTTP-Brige <https://github.com/MaZderMind/dvb-http-bridge>" \
-		http://www.lyngsat-logo.com/logo/tv/$logo -O $base
+	wget -nv --user-agent="Logo-Downloader for DVB-to-HTTP-Brige <https://github.com/MaZderMind/dvb-http-bridge>" --header 'Referer: https://www.lyngsat-logo.com/tv/' \
+		https://www.lyngsat-logo.com/logo/tv/$logo -O $base
 done
