@@ -35,6 +35,10 @@ app.use('/recordings', [
 	})
 ])
 
+app.use('/schedule.json', function(req, res, next) {
+	res.set('Content-Type', 'application/json').send(recording.getSchedule())
+})
+
 app.use(zap.router)
 //app.use(recording.router)
 
@@ -42,4 +46,5 @@ app.use(
 	serveStatic('./public')
 )
 
+console.log('Listening to [::]:'+config.port)
 app.listen(config.port, '::')

@@ -42,12 +42,12 @@ body {
 	color: white;
 }
 
+.schedule a,
 .recordings a {
-	background: url(/images/recordings/icon.png) no-repeat #808080 center center;
-	clear: both;
-	height: 175px;
-	line-height: 175px;
-	width: 100%;
+	height: 200px;
+	line-height: 200px;
+	width: 50%;
+	float: left;
 	padding-left: 250px;
 	box-sizing: border-box;
 	font-size: 64px;
@@ -56,4 +56,11 @@ body {
 	text-decoration: none;
 
 	display: block;
+}
+
+.recordings a {
+    background: url(/images/recordings/icon.png) no-repeat #808080 center center;
+}
+.schedule a {
+    background: url(/images/schedule/icon.png) no-repeat #e0e080 center center;
 }
